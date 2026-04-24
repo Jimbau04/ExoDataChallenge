@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD — ExoData Challenge 2026</title>
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #162337;
+    --navy-light: #1e3050;
+    --accent: #00c9a7;
+    --accent2: #4fa3e0;
+    --accent3: #f4a261;
+    --accent4: #e76f51;
+    --text: #e8edf4;
+    --text-muted: #8fa5bf;
+    --border: rgba(0,201,167,0.18);
+    --border-subtle: rgba(79,163,224,0.12);
+    --card: rgba(22,35,55,0.85);
+    --pill-bg: rgba(0,201,167,0.10);
+    --tag-purple: rgba(129,94,255,0.18);
+    --tag-purple-txt: #b69fff;
+    --tag-orange: rgba(244,162,97,0.18);
+    --tag-orange-txt: #f4a261;
+    --tag-blue: rgba(79,163,224,0.18);
+    --tag-blue-txt: #4fa3e0;
+    --tag-green: rgba(0,201,167,0.18);
+    --tag-green-txt: #00c9a7;
+    --tag-red: rgba(231,111,81,0.18);
+    --tag-red-txt: #e76f51;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--navy);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    font-size: 15px;
+    line-height: 1.65;
+    padding: 0;
+  }
+  /* COVER */
+  .cover {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0d1b2a 0%, #162337 60%, #0f2340 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .cover::before {
+    content: '';
+    position: absolute;
+    width: 600px; height: 600px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(0,201,167,0.07) 0%, transparent 70%);
+    top: -150px; right: -150px;
+  }
+  .cover::after {
+    content: '';
+    position: absolute;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(79,163,224,0.07) 0%, transparent 70%);
+    bottom: -100px; left: -100px;
+  }
+  .cover-badge {
+    display: inline-block;
+    background: var(--pill-bg);
+    border: 1px solid var(--border);
+    color: var(--accent);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 18px;
+    border-radius: 999px;
+    margin-bottom: 2rem;
+  }
+  .cover h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, #fff 0%, var(--accent) 60%, var(--accent2) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .cover-sub {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin-bottom: 3rem;
+  }
+  .cover-meta {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .cover-meta-item {
+    text-align: center;
+  }
+  .cover-meta-label {
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+  }
+  .cover-meta-val {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--accent);
+  }
+  .star-field {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+  /* MAIN */
+  .main {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 3rem 2rem 5rem;
+  }
+  /* SECTION */
+  .section {
+    margin-bottom: 4rem;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .section-num {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--navy);
+    font-weight: 800;
+    font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  /* CARDS */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card p { color: var(--text-muted); font-size: 14px; }
+  /* GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+  @media(max-width:680px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
+  /* TAG */
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.04em;
+  }
+  .tag-green { background: var(--tag-green); color: var(--tag-green-txt); }
+  .tag-blue  { background: var(--tag-blue);  color: var(--tag-blue-txt);  }
+  .tag-purple{ background: var(--tag-purple); color: var(--tag-purple-txt); }
+  .tag-orange{ background: var(--tag-orange); color: var(--tag-orange-txt); }
+  .tag-red   { background: var(--tag-red);    color: var(--tag-red-txt);   }
+  /* TABLE */
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  th {
+    background: var(--navy-light);
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:nth-child(even) td { background: rgba(255,255,255,0.02); }
+  .table-wrap { background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-subtle); margin-bottom: 1rem; }
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 32px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 10px; top: 8px; bottom: 8px;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), transparent);
+  }
+  .tl-item { position: relative; margin-bottom: 1.75rem; }
+  .tl-dot {
+    position: absolute;
+    left: -28px; top: 4px;
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 3px solid var(--navy);
+    box-shadow: 0 0 0 2px var(--accent);
+  }
+  .tl-dot.blue { background: var(--accent2); box-shadow: 0 0 0 2px var(--accent2); }
+  .tl-dot.orange { background: var(--accent3); box-shadow: 0 0 0 2px var(--accent3); }
+  .tl-date { font-size: 11px; color: var(--text-muted); font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 2px; }
+  .tl-title { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .tl-body { font-size: 13.5px; color: var(--text-muted); }
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: linear-gradient(135deg, rgba(0,201,167,0.06) 0%, rgba(79,163,224,0.06) 100%);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    border-radius: 10px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 1rem;
+    font-size: 14px;
+    color: var(--text);
+  }
+  .highlight strong { color: var(--accent); }
+  /* ROLE CARD */
+  .role-card {
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 12px;
+    padding: 1.2rem 1.4rem;
+  }
+  .role-name {
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 2px;
+  }
+  .role-title {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 0.75rem;
+  }
+  .role-tasks { list-style: none; }
+  .role-tasks li {
+    font-size: 13px;
+    color: var(--text-muted);
+    padding: 4px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    gap: 8px;
+  }
+  .role-tasks li:last-child { border-bottom: none; }
+  .role-tasks li::before { content: '→'; color: var(--accent); flex-shrink: 0; }
+  /* METRIC */
+  .metric-row { display: flex; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .metric {
+    flex: 1;
+    min-width: 140px;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    border-radius: 10px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .metric-val { font-size: 1.8rem; font-weight: 800; color: var(--accent); line-height: 1; }
+  .metric-label { font-size: 12px; color: var(--text-muted); margin-top: 4px; }
+  /* PIPELINE */
+  .pipeline { display: flex; gap: 0; flex-wrap: wrap; margin-bottom: 1rem; }
+  .pipe-step {
+    flex: 1;
+    min-width: 120px;
+    background: var(--card);
+    border: 1px solid var(--border-subtle);
+    padding: 0.9rem 1rem;
+    text-align: center;
+    position: relative;
+  }
+  .pipe-step:first-child { border-radius: 10px 0 0 10px; }
+  .pipe-step:last-child { border-radius: 0 10px 10px 0; }
+  .pipe-step:not(:last-child)::after {
+    content: '›';
+    position: absolute;
+    right: -10px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 20px;
+    z-index: 1;
+  }
+  .pipe-step-num { font-size: 22px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .pipe-step-label { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
+  /* CODE */
+  pre {
+    background: #0a1520;
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    font-size: 12.5px;
+    color: #a8d8a8;
+    overflow-x: auto;
+    margin-bottom: 1rem;
+    font-family: 'Cascadia Code', 'Fira Code', monospace;
+    line-height: 1.5;
+  }
+  code { font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 12.5px; color: var(--accent2); }
+  /* DIFF TABLE */
+  .diff-winner { color: var(--accent); font-weight: 700; }
+  /* SCORE */
+  .score-row { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .score-label { font-size: 13px; color: var(--text-muted); width: 200px; flex-shrink: 0; }
+  .score-bar-bg { flex: 1; height: 8px; background: var(--navy-light); border-radius: 999px; overflow: hidden; }
+  .score-bar { height: 100%; border-radius: 999px; background: var(--accent); }
+  .score-pts { font-size: 13px; font-weight: 700; color: var(--text); width: 40px; text-align: right; }
+  /* NAV */
+  .toc {
+    background: var(--navy-mid);
+    border-bottom: 1px solid var(--border-subtle);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .toc-title { font-size: 13px; font-weight: 700; color: var(--accent); white-space: nowrap; }
+  .toc a {
+    font-size: 12px;
+    color: var(--text-muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color .2s;
+  }
+  .toc a:hover { color: var(--accent); }
+  /* H2 anchors */
+  h2 { scroll-margin-top: 60px; }
+  /* UL */
+  ul.nice { list-style: none; }
+  ul.nice li { display: flex; gap: 8px; padding: 5px 0; font-size: 14px; color: var(--text-muted); }
+  ul.nice li::before { content: '✦'; color: var(--accent); font-size: 10px; flex-shrink: 0; margin-top: 4px; }
+  /* DIFFERENTIATORS */
+  .diff-card {
+    background: linear-gradient(135deg, rgba(0,201,167,0.05), rgba(79,163,224,0.05));
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem;
+  }
+  .diff-icon { font-size: 24px; margin-bottom: 8px; }
+  .diff-card-title { font-size: 1rem; font-weight: 700; margin-bottom: 6px; }
+  .diff-card-body { font-size: 13.5px; color: var(--text-muted); }
+  /* FOOTER */
+  footer {
+    text-align: center;
+    padding: 2.5rem;
+    color: var(--text-muted);
+    font-size: 13px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  /* star */
+  .star { position: absolute; border-radius: 50%; background: white; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<section class="cover" id="top">
+  <canvas class="star-field" id="stars"></canvas>
+  <div style="position:relative;z-index:1;">
+    <div class="cover-badge">ExoData Challenge · Feria de Puebla 2026</div>
+    <h1>Project Requirements<br>Document</h1>
+    <p class="cover-sub">Estrategia completa de análisis de exoplanetas mediante clustering no supervisado — diseñada para ganar.</p>
+    <div class="cover-meta">
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Dataset</div>
+        <div class="cover-meta-val">6,147 exoplanetas</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Presentación</div>
+        <div class="cover-meta-val">29 abr · 2026</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Equipo</div>
+        <div class="cover-meta-val">4 integrantes</div>
+      </div>
+      <div class="cover-meta-item">
+        <div class="cover-meta-label">Puntaje máx.</div>
+        <div class="cover-meta-val">100 pts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NAV -->
+<nav class="toc">
+  <span class="toc-title">🔭 PRD</span>
+  <a href="#vision">Visión</a>
+  <a href="#diferenciadores">Diferenciadores</a>
+  <a href="#equipo">Equipo</a>
+  <a href="#datos">Datos</a>
+  <a href="#pipeline">Pipeline ML</a>
+  <a href="#interpretacion">Interpretación</a>
+  <a href="#metricas">Métricas</a>
+  <a href="#presentacion">Presentación</a>
+  <a href="#riesgos">Riesgos</a>
+  <a href="#calendario">Calendario</a>
+</nav>
+
+<div class="main">
+
+<!-- 1. VISIÓN -->
+<section class="section" id="vision">
+  <div class="section-header">
+    <div class="section-num">1</div>
+    <h2 class="section-title">Visión del proyecto</h2>
+  </div>
+
+  <div class="highlight">
+    <strong>Objetivo central:</strong> Construir un sistema de clustering que descubra la "taxonomía natural" de los exoplanetas conocidos, más allá de las categorías clásicas. El diferencial está en la <strong>interpretación astrofísica profunda</strong> y en presentar resultados como una narrativa científica coherente y visualmente impactante.
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">🎯 Problema a resolver</div>
+      <p>El NASA Exoplanet Archive contiene 6,147 exoplanetas con datos heterogéneos, múltiples valores nulos y sesgos de detección. La tarea es agruparlos de forma significativa y traducir esos grupos en conocimiento astrofísico real.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">🏆 Criterio de éxito</div>
+      <p>Clusters que sean <strong>estadísticamente válidos</strong> (métricas internas), <strong>físicamente interpretables</strong> (alineados con tipologías conocidas: Hot Jupiters, super-Tierras, etc.) y presentados con <strong>narrativa científica clara</strong>.</p>
+    </div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric">
+      <div class="metric-val">70</div>
+      <div class="metric-label">pts — Desarrollo y Análisis</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">30</div>
+      <div class="metric-label">pts — Presentación final</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">30</div>
+      <div class="metric-label">pts — Interpretación astrofísica (el peso más alto)</div>
+    </div>
+    <div class="metric">
+      <div class="metric-val">320</div>
+      <div class="metric-label">columnas disponibles en PSCompPars</div>
+    </div>
+  </div>
+</section>
+
+<!-- 2. DIFERENCIADORES -->
+<section class="section" id="diferenciadores">
+  <div class="section-header">
+    <div class="section-num">2</div>
+    <h2 class="section-title">Diferenciadores clave (por qué ganaremos)</h2>
+  </div>
+
+  <div class="highlight">
+    La convocatoria puntúa la <strong>interpretación astrofísica con 30 puntos</strong> — el criterio individual más alto. La mayoría de equipos se quedará en K-Means + Silhouette Score. Nosotros iremos mucho más lejos.
+  </div>
+
+  <div class="grid-3" style="margin-bottom:1rem;">
+    <div class="diff-card">
+      <div class="diff-icon">🧬</div>
+      <div class="diff-card-title">Multi-algoritmo comparado</div>
+      <div class="diff-card-body">Correremos K-Means, DBSCAN, Gaussian Mixture Models y Clustering Jerárquico. Elegiremos el mejor por métricas, no por conveniencia. Eso muestra solidez metodológica.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon">🌌</div>
+      <div class="diff-card-title">Corrección de sesgo observacional</div>
+      <div class="diff-card-body">Analizaremos explícitamente los sesgos por método de detección (tránsitos vs. velocidad radial) y corregiremos su efecto en la distribución de clusters. Nadie más lo hará.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon">🪐</div>
+      <div class="diff-card-title">Habitabilidad como eje narrativo</div>
+      <div class="diff-card-body">Usaremos <code>pl_insol</code> y <code>pl_eqt</code> para identificar candidatos en zona habitable dentro de los clusters. Un resultado con impacto emocional y científico para el jurado.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon">📐</div>
+      <div class="diff-card-title">Ingeniería de features avanzada</div>
+      <div class="diff-card-body">Crearemos features derivados: densidad calculada, relación masa-radio, índice de insolación, ratio periodo/eje mayor (verificación de Kepler). Features que los demás no generarán.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon">🔭</div>
+      <div class="diff-card-title">Imputación científica (no estadística)</div>
+      <div class="diff-card-body">Los valores nulos se imputarán usando relaciones físicas reales (relación masa-radio de Zeng & Sasselov), no con medias o medianas. Esto es lo que haría un astrofísico.</div>
+    </div>
+    <div class="diff-card">
+      <div class="diff-icon">🎨</div>
+      <div class="diff-card-title">Visualización nivel publicación</div>
+      <div class="diff-card-body">Diagrama de Hertzsprung-Russell, diagrama masa-radio con zonas coloreadas por composición, scatter plots en escala logarítmica. Visualizaciones que parecen de una revista científica.</div>
+    </div>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Dimensión</th>
+          <th>Equipo promedio</th>
+          <th>Nuestro equipo</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Algoritmos</td>
+          <td>Solo K-Means</td>
+          <td class="diff-winner">K-Means + DBSCAN + GMM + Jerárquico (comparativa)</td>
+        </tr>
+        <tr>
+          <td>Manejo de nulos</td>
+          <td>Dropna() o fillna(media)</td>
+          <td class="diff-winner">Imputación con relaciones físicas (masa-radio de Zeng & Sasselov)</td>
+        </tr>
+        <tr>
+          <td>Features</td>
+          <td>Variables originales del CSV</td>
+          <td class="diff-winner">+7 features derivados con sentido físico</td>
+        </tr>
+        <tr>
+          <td>Sesgo observacional</td>
+          <td>No mencionado</td>
+          <td class="diff-winner">Análisis explícito y corrección parcial</td>
+        </tr>
+        <tr>
+          <td>Interpretación</td>
+          <td>Nombre del cluster + media de variables</td>
+          <td class="diff-winner">Historia astrofísica por cluster + alineación con literatura</td>
+        </tr>
+        <tr>
+          <td>Visualización</td>
+          <td>Scatter plot básico</td>
+          <td class="diff-winner">Diagrama masa-radio, H-R, mapas de densidad, t-SNE 2D</td>
+        </tr>
+        <tr>
+          <td>Habitabilidad</td>
+          <td>No incluida</td>
+          <td class="diff-winner">Zona habitable calculada con pl_insol y pl_eqt</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 3. EQUIPO -->
+<section class="section" id="equipo">
+  <div class="section-header">
+    <div class="section-num">3</div>
+    <h2 class="section-title">Estructura del equipo (4 personas)</h2>
+  </div>
+
+  <div class="highlight">
+    Cada integrante tiene un <strong>rol principal</strong> y responsabilidades secundarias. El trabajo se hace en Jupyter Notebooks compartidos en GitHub. Reuniones diarias de 20 min (stand-up) durante el periodo de desarrollo.
+  </div>
+
+  <div class="grid-2">
+    <div class="role-card">
+      <div class="role-name">Integrante A</div>
+      <div class="role-title"><span class="tag tag-blue">Data Lead</span> · Procesamiento y EDA</div>
+      <ul class="role-tasks">
+        <li>Limpieza del CSV (encabezados, valores nulos, tipos de dato)</li>
+        <li>Análisis exploratorio: distribuciones, correlaciones, outliers</li>
+        <li>Ingeniería de features derivados (densidad, insolación, ratio K)</li>
+        <li>Imputación científica de masas y radios faltantes</li>
+        <li>Normalización y escalado para clustering</li>
+      </ul>
+    </div>
+    <div class="role-card">
+      <div class="role-name">Integrante B</div>
+      <div class="role-title"><span class="tag tag-purple">ML Lead</span> · Modelado y métricas</div>
+      <ul class="role-tasks">
+        <li>Implementar K-Means, DBSCAN, GMM, Jerárquico</li>
+        <li>Optimización de hiperparámetros (K óptima, epsilon, etc.)</li>
+        <li>Calcular Silhouette Score, Davies-Bouldin, Calinski-Harabasz</li>
+        <li>Dimensionalidad: PCA + t-SNE/UMAP para visualización</li>
+        <li>Selección y justificación del modelo final</li>
+      </ul>
+    </div>
+    <div class="role-card">
+      <div class="role-name">Integrante C</div>
+      <div class="role-title"><span class="tag tag-green">Astro Lead</span> · Interpretación científica</div>
+      <ul class="role-tasks">
+        <li>Mapear clusters a tipologías conocidas (Hot Jupiter, super-Tierra, etc.)</li>
+        <li>Analizar sesgos observacionales por método de detección</li>
+        <li>Calcular zona habitable y candidatos relevantes</li>
+        <li>Redactar narrativa astrofísica de cada cluster</li>
+        <li>Verificar consistencia con literatura científica</li>
+      </ul>
+    </div>
+    <div class="role-card">
+      <div class="role-name">Integrante D</div>
+      <div class="role-title"><span class="tag tag-orange">Viz & Presentación Lead</span></div>
+      <ul class="role-tasks">
+        <li>Crear visualizaciones: diagrama masa-radio, H-R, scatter plots</li>
+        <li>t-SNE 2D coloreado por cluster y por método de detección</li>
+        <li>Diseñar y montar la presentación con estructura CRISP-DM</li>
+        <li>Preparar slide deck visualmente impactante (Keynote/PowerPoint)</li>
+        <li>Ensayar y coordinar la presentación oral</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 4. DATOS -->
+<section class="section" id="datos">
+  <div class="section-header">
+    <div class="section-num">4</div>
+    <h2 class="section-title">Comprensión y preparación de datos</h2>
+  </div>
+
+  <div class="card" style="margin-bottom:1rem;">
+    <div class="card-title">📦 Dataset: PSCompPars (NASA Exoplanet Archive)</div>
+    <p>6,147 filas · 320 columnas · Descargado el 22 abril 2026. <strong>Un solo CSV</strong> con parámetros compositos (los valores más completos disponibles por planeta). Advertencia: parámetros de distintas referencias — no autoconsistentes.</p>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Variables clave seleccionadas para clustering</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Variable</th><th>Descripción</th><th>Unidad</th><th>Completitud est.</th><th>Uso</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>pl_rade</code></td><td>Radio del planeta</td><td>Radios terrestres</td><td><span class="tag tag-green">~85%</span></td><td>Clasificación primaria</td></tr>
+        <tr><td><code>pl_bmasse</code></td><td>Mejor estimado de masa</td><td>Masas terrestres</td><td><span class="tag tag-orange">~55%</span></td><td>Clasificación + densidad</td></tr>
+        <tr><td><code>pl_orbper</code></td><td>Periodo orbital</td><td>Días</td><td><span class="tag tag-green">~90%</span></td><td>Tipo orbital</td></tr>
+        <tr><td><code>pl_orbsmax</code></td><td>Semi-eje mayor</td><td>AU</td><td><span class="tag tag-green">~80%</span></td><td>Distancia estelar</td></tr>
+        <tr><td><code>pl_eqt</code></td><td>Temperatura de equilibrio</td><td>Kelvin</td><td><span class="tag tag-orange">~65%</span></td><td>Habitabilidad</td></tr>
+        <tr><td><code>pl_insol</code></td><td>Flujo de insolación</td><td>Flujo terrestre</td><td><span class="tag tag-orange">~60%</span></td><td>Habitabilidad</td></tr>
+        <tr><td><code>pl_orbeccen</code></td><td>Excentricidad orbital</td><td>adimensional</td><td><span class="tag tag-red">~45%</span></td><td>Dinámica orbital</td></tr>
+        <tr><td><code>st_teff</code></td><td>Temperatura efectiva estrella</td><td>Kelvin</td><td><span class="tag tag-green">~88%</span></td><td>Tipo estelar</td></tr>
+        <tr><td><code>st_met</code></td><td>Metalicidad estelar [Fe/H]</td><td>dex</td><td><span class="tag tag-orange">~70%</span></td><td>Composición</td></tr>
+        <tr><td><code>sy_pnum</code></td><td>Número de planetas en sistema</td><td>entero</td><td><span class="tag tag-green">~95%</span></td><td>Arquitectura</td></tr>
+        <tr><td><code>discoverymethod</code></td><td>Método de detección</td><td>categórico</td><td><span class="tag tag-green">~99%</span></td><td>Análisis de sesgo</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Features derivados (ingeniería de características)</h3>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">📊 Features a crear</div>
+      <ul class="nice">
+        <li><strong>pl_dens_calc</strong> — densidad calculada si radio y masa disponibles (g/cm³)</li>
+        <li><strong>log_period</strong> — log10(pl_orbper) — lineariza la distribución sesgada</li>
+        <li><strong>log_rade</strong> — log10(pl_rade) — igual justificación</li>
+        <li><strong>log_bmasse</strong> — log10(pl_bmasse) — igual</li>
+        <li><strong>mass_radius_ratio</strong> — proxy de composición (alta → rocoso)</li>
+        <li><strong>kepler_check</strong> — verifica T² ∝ a³ (validación de consistencia)</li>
+        <li><strong>hz_flag</strong> — 0.2 ≤ pl_insol ≤ 1.7 → zona habitable conservadora</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🔧 Estrategia de nulos</div>
+      <ul class="nice">
+        <li>Si radio conocido pero masa no: usar relación Zeng & Sasselov (2016) para estimar masa según tipo (rocoso vs gaseoso)</li>
+        <li>Si masa conocida pero radio no: invertir relación M-R</li>
+        <li>Si pl_eqt nulo pero pl_insol disponible: calcular T_eq = 278.5 × (L*/L_sol)^0.25 × (a/AU)^-0.5</li>
+        <li>Variables con >60% nulos: excluir del clustering, incluir solo en análisis descriptivo</li>
+        <li>Nunca imputar con media/mediana — siempre registrar qué fue imputado con un flag</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Sesgos observacionales a documentar</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Método</th><th>% aprox. en dataset</th><th>Sesgo principal</th><th>Efecto en clustering</th></tr></thead>
+      <tbody>
+        <tr><td>Tránsito (Kepler/TESS)</td><td>~80%</td><td>Favorece radios grandes y periodos cortos</td><td>Sobrerepresenta Hot Jupiters y sub-Neptunos</td></tr>
+        <tr><td>Velocidad radial</td><td>~15%</td><td>Favorece planetas masivos</td><td>Datos de masa más completos que radio</td></tr>
+        <tr><td>Imagen directa</td><td>~2%</td><td>Favorece planetas jóvenes y gigantes</td><td>Outliers en luminosidad/temperatura</td></tr>
+        <tr><td>Microlentes</td><td>~2%</td><td>Favorece planetas lejos de su estrella</td><td>Outliers en semi-eje mayor</td></tr>
+        <tr><td>Otros</td><td>~1%</td><td>Variado</td><td>Ruido, tratar como grupo especial</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 5. PIPELINE ML -->
+<section class="section" id="pipeline">
+  <div class="section-header">
+    <div class="section-num">5</div>
+    <h2 class="section-title">Pipeline de Machine Learning</h2>
+  </div>
+
+  <div class="pipeline">
+    <div class="pipe-step">
+      <div class="pipe-step-num">1</div>
+      <div class="pipe-step-label">Ingesta & limpieza</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-step-num">2</div>
+      <div class="pipe-step-label">EDA</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-step-num">3</div>
+      <div class="pipe-step-label">Feature eng.</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-step-num">4</div>
+      <div class="pipe-step-label">Escalado</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-step-num">5</div>
+      <div class="pipe-step-label">Reducción dim.</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-step-num">6</div>
+      <div class="pipe-step-label">Clustering</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-step-num">7</div>
+      <div class="pipe-step-label">Evaluación</div>
+    </div>
+    <div class="pipe-step">
+      <div class="pipe-step-num">8</div>
+      <div class="pipe-step-label">Interpretación</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Paso 1–3: Ingesta, EDA y Feature Engineering</h3>
+
+  <pre>
+# 1. Leer CSV saltando líneas de comentario (#)
+import pandas as pd
+df = pd.read_csv('PSCompPars_2026.csv', comment='#')
+
+# 2. Inspección inicial
+print(df.shape)  # (6147, 320)
+df.info()
+df.describe()
+
+# 3. Completitud por columna
+completeness = (df.notna().sum() / len(df) * 100).sort_values(ascending=False)
+
+# 4. Features logarítmicos (distribuciones con cola larga)
+import numpy as np
+df['log_period'] = np.log10(df['pl_orbper'].clip(lower=0.01))
+df['log_rade']   = np.log10(df['pl_rade'].clip(lower=0.01))
+df['log_bmasse'] = np.log10(df['pl_bmasse'].clip(lower=0.01))
+df['log_smax']   = np.log10(df['pl_orbsmax'].clip(lower=0.0001))
+
+# 5. Densidad calculada
+df['pl_dens_calc'] = df.apply(
+    lambda r: (r['pl_bmasse'] * 5.972e24) /
+              ((4/3) * np.pi * (r['pl_rade'] * 6.371e6)**3) / 1000
+    if pd.notna(r['pl_bmasse']) and pd.notna(r['pl_rade']) else np.nan, axis=1)
+
+# 6. Flag zona habitable conservadora (0.2 ≤ insol ≤ 1.7)
+df['hz_flag'] = df['pl_insol'].between(0.2, 1.7).astype(int)
+  </pre>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Paso 4–5: Escalado y Reducción de Dimensionalidad</h3>
+
+  <pre>
+from sklearn.preprocessing import RobustScaler
+from sklearn.decomposition import PCA
+from sklearn.manifold import TSNE
+import umap  # pip install umap-learn
+
+# Features seleccionadas para clustering (alta completitud + relevancia física)
+FEATURES = ['log_rade','log_bmasse','log_period','log_smax','pl_eqt',
+            'st_teff','st_met','sy_pnum']
+
+df_clean = df[FEATURES].dropna()  # guardar índice para merge posterior
+print(f"Filas para clustering: {len(df_clean)}")
+
+# RobustScaler: mejor que StandardScaler para datos astronómicos con outliers
+scaler = RobustScaler()
+X = scaler.fit_transform(df_clean)
+
+# PCA para clustering (mantener 95% varianza)
+pca = PCA(n_components=0.95, random_state=42)
+X_pca = pca.fit_transform(X)
+print(f"Componentes PCA: {X_pca.shape[1]}")
+
+# t-SNE para VISUALIZACIÓN (no para clustering)
+tsne = TSNE(n_components=2, perplexity=40, random_state=42, n_jobs=-1)
+X_tsne = tsne.fit_transform(X)
+
+# UMAP como alternativa más rápida
+reducer = umap.UMAP(n_components=2, random_state=42)
+X_umap = reducer.fit_transform(X)
+  </pre>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Paso 6: Cuatro algoritmos de clustering</h3>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">K-Means (baseline)</div>
+      <p>Probar K de 3 a 10. Usar método del codo + Silhouette para elegir K óptima. Ventaja: interpretable. Limitación: asume clusters esféricos.</p>
+      <pre style="font-size:11px;margin-top:8px;">
+from sklearn.cluster import KMeans
+from sklearn.metrics import silhouette_score
+
+scores = {}
+for k in range(3, 11):
+    km = KMeans(n_clusters=k, n_init=20, random_state=42)
+    labels = km.fit_predict(X_pca)
+    scores[k] = silhouette_score(X_pca, labels)
+K_optimal = max(scores, key=scores.get)
+      </pre>
+    </div>
+    <div class="card">
+      <div class="card-title">DBSCAN (detección de outliers)</div>
+      <p>Ideal para encontrar planetas "anómalos" (detección directa, planetas libres, circumbinarios). El ruido (-1) es información astrofísica valiosa.</p>
+      <pre style="font-size:11px;margin-top:8px;">
+from sklearn.cluster import DBSCAN
+from sklearn.neighbors import NearestNeighbors
+
+# Calcular epsilon óptimo con k-dist graph
+nbrs = NearestNeighbors(n_neighbors=5).fit(X_pca)
+distances, _ = nbrs.kneighbors(X_pca)
+eps_opt = np.percentile(distances[:,4], 90)
+
+db = DBSCAN(eps=eps_opt, min_samples=10)
+db_labels = db.fit_predict(X_pca)
+      </pre>
+    </div>
+    <div class="card">
+      <div class="card-title">Gaussian Mixture Models</div>
+      <p>Clustering probabilístico. Permite clusters elípticos y superpuestos. Ideal para transiciones graduales entre tipos planetarios (sub-Neptuno ↔ Neptuno).</p>
+      <pre style="font-size:11px;margin-top:8px;">
+from sklearn.mixture import GaussianMixture
+
+# BIC para seleccionar número óptimo de componentes
+bic = []
+for k in range(3, 11):
+    gmm = GaussianMixture(n_components=k, covariance_type='full', random_state=42)
+    gmm.fit(X_pca)
+    bic.append(gmm.bic(X_pca))
+K_gmm = range(3,11)[np.argmin(bic)]
+      </pre>
+    </div>
+    <div class="card">
+      <div class="card-title">Clustering Jerárquico</div>
+      <p>Genera un dendrograma que muestra relaciones entre tipos. Excelente para la presentación visual. No requiere K de antemano.</p>
+      <pre style="font-size:11px;margin-top:8px;">
+from scipy.cluster.hierarchy import dendrogram, linkage, fcluster
+from scipy.spatial.distance import pdist
+
+# Ward minimiza varianza intra-cluster
+Z = linkage(X_pca, method='ward')
+# Cortar en N clusters (determinado por análisis previo)
+hier_labels = fcluster(Z, t=K_optimal, criterion='maxclust')
+      </pre>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Paso 7: Métricas de evaluación</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Métrica</th><th>Rango ideal</th><th>Qué mide</th><th>Por qué incluirla</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Silhouette Score</strong></td><td>Más cercano a +1</td><td>Cohesión intra-cluster vs. separación inter-cluster</td><td>La más conocida por el jurado</td></tr>
+        <tr><td><strong>Davies-Bouldin Index</strong></td><td>Más cercano a 0</td><td>Ratio de dispersión intra / distancia entre centroides</td><td>Complementa Silhouette</td></tr>
+        <tr><td><strong>Calinski-Harabasz</strong></td><td>Más alto mejor</td><td>Ratio de varianza inter / intra cluster</td><td>Favorece clusters compactos y separados</td></tr>
+        <tr><td><strong>BIC (para GMM)</strong></td><td>Mínimo</td><td>Bondad de ajuste penalizada por complejidad</td><td>Criterio de información para modelos probabilísticos</td></tr>
+        <tr><td><strong>Pureza por método detección</strong></td><td>Homogénea</td><td>¿Clusters mezclados por sesgo de detección?</td><td>Análisis de sesgo único en la competencia</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 6. INTERPRETACIÓN -->
+<section class="section" id="interpretacion">
+  <div class="section-header">
+    <div class="section-num">6</div>
+    <h2 class="section-title">Interpretación astrofísica de clusters</h2>
+  </div>
+
+  <div class="highlight">
+    <strong>Este es el punto más valioso del proyecto (30 pts).</strong> Cada cluster debe contar una historia: qué tipo de planeta es, cómo se forma, qué lo hace especial, y por qué tiene sentido encontrarlo ahí.
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Taxonomía esperada (basada en la guía de la convocatoria)</h3>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Cluster esperado</th><th>Criterio radio (R⊕)</th><th>Criterio masa (M⊕)</th><th>Características adicionales</th><th>Ejemplo real</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="tag tag-blue">Planetas tipo Tierra</span></td>
+          <td>&lt; 1.25</td>
+          <td>0.1 – 10</td>
+          <td>Alta densidad, órbitas variadas, temperatura moderada</td>
+          <td>Kepler-186f, TRAPPIST-1e</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-green">Super-Tierras</span></td>
+          <td>1.25 – 2.0</td>
+          <td>2 – 15</td>
+          <td>Probablemente rocosos o con envoltura gaseosa delgada</td>
+          <td>55 Cnc e, Kepler-62e</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-purple">Sub-Neptunos</span></td>
+          <td>2.0 – 4.0</td>
+          <td>5 – 50</td>
+          <td>El grupo más abundante en Kepler; "desierto de Neptuno" visible</td>
+          <td>Kepler-11 b-f</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-orange">Hot Jupiters</span></td>
+          <td>&gt; 10 (en R⊕) / &gt;0.5 R♃</td>
+          <td>&gt; 100</td>
+          <td>Periodos muy cortos (&lt;10 días), alta temperatura, órbitas circulares</td>
+          <td>51 Peg b, WASP-12b</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-blue">Gigantes fríos</span></td>
+          <td>&gt; 10 (en R⊕)</td>
+          <td>50 – 4000</td>
+          <td>Periodos largos, lejos de la estrella, análogos a Júpiter/Saturno</td>
+          <td>HR 8799 b, beta Pic b</td>
+        </tr>
+        <tr>
+          <td><span class="tag tag-red">Planetas anómalos</span></td>
+          <td>Variado</td>
+          <td>Variado</td>
+          <td>Detección directa, circumbinarios, planetas libres — ruido de DBSCAN</td>
+          <td>PSR 1257+12, Kepler-16b</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Análisis de habitabilidad — el diferenciador narrativo</h3>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">🌍 Zona habitable conservadora</div>
+      <p>Planetas con <code>pl_insol</code> entre 0.2 y 1.7 veces el flujo terrestre. Filtrar además por radio &lt; 2 R⊕ (posiblemente rocoso). Listar los top 5 candidatos con nombre, sistema y temperatura de equilibrio.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">💧 Condiciones para agua líquida</div>
+      <p>Temperatura de equilibrio entre 200 K y 320 K (con albedo ~0.3). Estos planetas son el "gancho" emocional de la presentación: <em>¿podría haber vida allí?</em></p>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Verificación del "desierto de Neptuno"</h3>
+  <div class="highlight">
+    Un hallazgo notable que podemos destacar: los exoplanetas con periodos muy cortos (&lt;3 días) y radios intermedios (2–4 R⊕) son extremadamente raros — el <strong>desierto de Neptuno</strong>. Si nuestro clustering lo captura como una zona de baja densidad entre clusters, eso es un resultado astrofísicamente significativo que el jurado reconocerá.
+  </div>
+</section>
+
+<!-- 7. MÉTRICAS Y VISUALIZACIONES -->
+<section class="section" id="metricas">
+  <div class="section-header">
+    <div class="section-num">7</div>
+    <h2 class="section-title">Visualizaciones planificadas</h2>
+  </div>
+
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">1. Diagrama masa-radio (el más importante)</div>
+      <p>Scatter log-log de masa vs. radio, coloreado por cluster. Superponer líneas de composición teórica (hierro puro, roca, agua, gas). Este diagrama es el "resultado central" del proyecto.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">2. t-SNE / UMAP 2D coloreado</div>
+      <p>Espacio reducido 2D con puntos coloreados por cluster. Repetir coloreado por método de detección para mostrar análisis de sesgo. Mostrar ambos lado a lado.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">3. Diagrama periodo-radio (Kepler/Fulton)</div>
+      <p>Scatter de periodo orbital vs. radio, coloreado por cluster. Muestra el desierto de Neptuno y la brecha de radios de Fulton (~1.8 R⊕). Resultado astrofísico de alto impacto.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">4. Diagrama H-R extendido</div>
+      <p>Temperatura efectiva estelar vs. luminosidad (o radio) de la estrella, coloreado por tipo de planeta en el sistema. Muestra qué estrellas hospedan qué tipos de planetas.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">5. Mapa de calor de correlaciones</div>
+      <p>Correlación entre todas las variables seleccionadas (log-transformadas). Identificar qué features son más informativos para la separación de clusters.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">6. Dendrograma jerárquico</div>
+      <p>Árbol de clustering jerárquico truncado a nivel visual. Muestra la estructura de similitud entre grupos — excelente para la presentación oral.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">7. Boxplots por cluster</div>
+      <p>Distribución de cada variable clave por cluster. Permite cuantificar las diferencias y justificar la interpretación astrofísica con estadísticos descriptivos.</p>
+    </div>
+    <div class="card">
+      <div class="card-title">8. Mapa de zona habitable</div>
+      <p>Scatter de flujo de insolación vs. radio, marcando la zona habitable optimista y conservadora. Identificar los candidatos más prometedores como "Tierra 2.0".</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8. PRESENTACIÓN -->
+<section class="section" id="presentacion">
+  <div class="section-header">
+    <div class="section-num">8</div>
+    <h2 class="section-title">Estructura de la presentación (CRISP-DM)</h2>
+  </div>
+
+  <div class="highlight">
+    La presentación debe durar entre 10–15 minutos. Cada sección de CRISP-DM es un "acto" de la narrativa. El hilo conductor: <em>"¿Cómo serán los mundos que orbitan otras estrellas?"</em>
+  </div>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Slide 1–2 · Apertura (1 min)</div>
+      <div class="tl-title">🚀 Hook emocional</div>
+      <div class="tl-body">Foto de exoplaneta real / imagen artística. Pregunta: "¿Están solos en el universo?". Presentar el reto y el dataset. Cifra impactante: 6,147 mundos confirmados fuera de nuestro sistema solar.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot blue"></div>
+      <div class="tl-date">Slide 3–4 · CRISP-DM Fase 1-2 (2 min)</div>
+      <div class="tl-title">📚 Comprensión del problema y los datos</div>
+      <div class="tl-body">Explicar qué es PSCompPars. Mostrar el mapa de completitud (heatmap de nulos). Introducir los sesgos observacionales con un gráfico de pastel por método de detección.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot orange"></div>
+      <div class="tl-date">Slide 5–7 · CRISP-DM Fase 3 (3 min)</div>
+      <div class="tl-title">🔧 Preparación de datos e ingeniería de features</div>
+      <div class="tl-body">Mostrar la estrategia de imputación científica (relación M-R). Explicar los 7 features derivados. Mostrar las distribuciones antes/después de transformación logarítmica. Decisión de variables finales para clustering.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot"></div>
+      <div class="tl-date">Slide 8–10 · CRISP-DM Fase 4 (3 min)</div>
+      <div class="tl-title">🤖 Modelado y selección de algoritmo</div>
+      <div class="tl-body">Presentar los 4 algoritmos con sus resultados. Tabla comparativa de métricas. Justificar la elección del algoritmo final. Mostrar el t-SNE/UMAP coloreado por cluster. Dendrograma.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot blue"></div>
+      <div class="tl-date">Slide 11–14 · CRISP-DM Fase 5 (3 min)</div>
+      <div class="tl-title">🪐 Interpretación astrofísica — el corazón del proyecto</div>
+      <div class="tl-body">Un slide por cluster principal. Diagrama masa-radio con zonas de composición. Identificar Hot Jupiters, super-Tierras, etc. Mostrar el desierto de Neptuno. Presentar los 5 candidatos en zona habitable.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot orange"></div>
+      <div class="tl-date">Slide 15–16 · Cierre (1 min)</div>
+      <div class="tl-title">🌟 Conclusiones y propuestas</div>
+      <div class="tl-body">Limitaciones (sesgos, nulos, consistencia de datos). Propuesta de mejora: incluir datos espectrales de atmósferas (pl_ntranspec). Aplicación: priorizar targets para futuros telescopios (JWST, PLATO). Mensaje final emotivo.</div>
+    </div>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Distribución del puntaje — estrategia de maximización</h3>
+
+  <div class="score-row"><div class="score-label">Interpretación astrofísica (Fase 5)</div><div class="score-bar-bg"><div class="score-bar" style="width:100%"></div></div><div class="score-pts">30 pts</div></div>
+  <div class="score-row"><div class="score-label">Clustering correcto + validación</div><div class="score-bar-bg"><div class="score-bar" style="width:67%"></div></div><div class="score-pts">20 pts</div></div>
+  <div class="score-row"><div class="score-label">Creatividad del modelo</div><div class="score-bar-bg"><div class="score-bar" style="width:67%"></div></div><div class="score-pts">20 pts</div></div>
+  <div class="score-row"><div class="score-label">Claridad y estructura CRISP-DM</div><div class="score-bar-bg"><div class="score-bar" style="width:33%;background:var(--accent2)"></div></div><div class="score-pts">10 pts</div></div>
+  <div class="score-row"><div class="score-label">Comunicación de resultados</div><div class="score-bar-bg"><div class="score-bar" style="width:33%;background:var(--accent2)"></div></div><div class="score-pts">10 pts</div></div>
+  <div class="score-row"><div class="score-label">Viabilidad de propuestas</div><div class="score-bar-bg"><div class="score-bar" style="width:33%;background:var(--accent3)"></div></div><div class="score-pts">10 pts</div></div>
+</section>
+
+<!-- 9. RIESGOS -->
+<section class="section" id="riesgos">
+  <div class="section-header">
+    <div class="section-num">9</div>
+    <h2 class="section-title">Riesgos y mitigaciones</h2>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Riesgo</th><th>Probabilidad</th><th>Impacto</th><th>Mitigación</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Muchas variables con nulos no permiten suficientes filas para clustering</td>
+          <td><span class="tag tag-orange">Media</span></td>
+          <td><span class="tag tag-red">Alto</span></td>
+          <td>Usar solo variables con &gt;70% completitud. Tener 2 sets de features: "completo" y "reducido".</td>
+        </tr>
+        <tr>
+          <td>K-Means da clusters sin sentido físico</td>
+          <td><span class="tag tag-blue">Baja</span></td>
+          <td><span class="tag tag-orange">Medio</span></td>
+          <td>Siempre correr los 4 algoritmos. GMM suele dar mejores resultados en datos astronómicos.</td>
+        </tr>
+        <tr>
+          <td>t-SNE produce visualizaciones engañosas</td>
+          <td><span class="tag tag-orange">Media</span></td>
+          <td><span class="tag tag-blue">Bajo</span></td>
+          <td>Aclarar en la presentación que t-SNE es solo para visualización, no determina los clusters.</td>
+        </tr>
+        <tr>
+          <td>El jurado no está familiarizado con las métricas</td>
+          <td><span class="tag tag-orange">Media</span></td>
+          <td><span class="tag tag-orange">Medio</span></td>
+          <td>Explicar Silhouette con una analogía visual simple. Enfocarse en interpretación astrofísica.</td>
+        </tr>
+        <tr>
+          <td>Tiempo insuficiente para todos los análisis</td>
+          <td><span class="tag tag-orange">Media</span></td>
+          <td><span class="tag tag-red">Alto</span></td>
+          <td>Priorizar: (1) clustering básico funcional, (2) interpretación, (3) análisis adicionales. El calendario tiene buffer.</td>
+        </tr>
+        <tr>
+          <td>Dos CSVs con fechas distintas — diferencias</td>
+          <td><span class="tag tag-blue">Baja</span></td>
+          <td><span class="tag tag-blue">Bajo</span></td>
+          <td>Usar el más reciente (15:36:24). Comparar shapes para detectar diferencias.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 10. CALENDARIO -->
+<section class="section" id="calendario">
+  <div class="section-header">
+    <div class="section-num">10</div>
+    <h2 class="section-title">Calendario detallado de trabajo</h2>
+  </div>
+
+  <div class="highlight">
+    <strong>Deadline de resultados: 27 de abril 2026.</strong> Tenemos 5 días hábiles desde hoy (22 abr). La presentación es el 29 de abril.
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Día</th><th>Fecha</th><th>Integrante A (Data)</th><th>Integrante B (ML)</th><th>Integrante C (Astro)</th><th>Integrante D (Viz)</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Día 1</strong></td>
+          <td>22 abr (hoy)</td>
+          <td>Setup repo GitHub, leer CSV, limpieza básica, reporte de nulos</td>
+          <td>Revisar PSCompPars docs, instalar entorno (sklearn, umap, plotly)</td>
+          <td>Leer guía astrofísica, estudiar taxonomías, listar hipótesis por cluster</td>
+          <td>Crear estructura del slide deck, buscar imágenes de exoplanetas</td>
+        </tr>
+        <tr>
+          <td><strong>Día 2</strong></td>
+          <td>23 abr</td>
+          <td>Feature engineering: logs, densidad calculada, hz_flag, imputación M-R</td>
+          <td>EDA exploratorio: correlaciones, outliers, análisis por discoverymethod</td>
+          <td>Redactar interpretación esperada de cada cluster (pre-análisis)</td>
+          <td>Diseñar paleta de colores y estilo visual del proyecto</td>
+        </tr>
+        <tr>
+          <td><strong>Día 3</strong></td>
+          <td>24 abr</td>
+          <td>Selección final de features, escalado, PCA, t-SNE, UMAP</td>
+          <td>Correr K-Means (k=3–10) + DBSCAN + GMM + Jerárquico, calcular métricas</td>
+          <td>Analizar clusters preliminares contra taxonomía física</td>
+          <td>Crear visualizaciones 1–4 (masa-radio, t-SNE, periodo-radio, H-R)</td>
+        </tr>
+        <tr>
+          <td><strong>Día 4</strong></td>
+          <td>25 abr</td>
+          <td>Refinar imputación, validar consistencia física de clusters</td>
+          <td>Seleccionar modelo final, análisis de sesgo por método detección</td>
+          <td>Redactar narrativa definitiva por cluster, identificar zona habitable</td>
+          <td>Crear visualizaciones 5–8, montar slides 1–10</td>
+        </tr>
+        <tr>
+          <td><strong>Día 5</strong></td>
+          <td>26 abr</td>
+          <td>Documentar todo el pipeline en README</td>
+          <td>Pulir notebook final, añadir comentarios explicativos</td>
+          <td>Redactar conclusiones, limitaciones y propuestas de mejora</td>
+          <td>Completar slides 11–16, primera versión completa de presentación</td>
+        </tr>
+        <tr>
+          <td><strong>Día 6</strong></td>
+          <td>27 abr</td>
+          <td colspan="4" style="text-align:center;color:var(--accent);font-weight:700;">🎯 DEADLINE — Entrega del repositorio. Ensayo general de la presentación (todos). Correcciones finales.</td>
+        </tr>
+        <tr>
+          <td><strong>Día 7–8</strong></td>
+          <td>28–29 abr</td>
+          <td colspan="4" style="text-align:center;color:var(--accent2);font-weight:700;">🎤 PRESENTACIÓN FINAL — Planetario de Puebla, 29 de abril de 2026</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="font-size:1rem;font-weight:700;margin:1.5rem 0 0.75rem;color:var(--accent2);">Estructura del repositorio GitHub</h3>
+
+  <pre>
+exodata-challenge-2026/
+├── README.md                    ← Descripción del proyecto y cómo reproducirlo
+├── data/
+│   ├── PSCompPars_2026.csv      ← Dataset original
+│   └── processed/               ← Datos limpios y features derivados
+├── notebooks/
+│   ├── 01_ingesta_limpieza.ipynb
+│   ├── 02_eda.ipynb
+│   ├── 03_feature_engineering.ipynb
+│   ├── 04_clustering.ipynb      ← Los 4 algoritmos + métricas
+│   ├── 05_interpretacion.ipynb  ← Análisis astrofísico por cluster
+│   └── 06_visualizaciones.ipynb ← Todas las gráficas finales
+├── src/
+│   ├── utils.py                 ← Funciones auxiliares
+│   └── imputation.py            ← Relación masa-radio Zeng & Sasselov
+├── figures/                     ← PNGs de alta resolución para slides
+├── presentation/
+│   └── ExoData_Challenge_2026.pptx
+└── requirements.txt
+  </pre>
+</section>
+
+<!-- CIERRE -->
+<div class="card" style="background: linear-gradient(135deg, rgba(0,201,167,0.07), rgba(79,163,224,0.07)); border-color: var(--border); text-align:center; padding: 2rem;">
+  <div style="font-size:1.8rem;margin-bottom:0.5rem;">🏆</div>
+  <div style="font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;">Estrategia para ganar en una frase</div>
+  <div style="color:var(--text-muted);font-size:14px;max-width:600px;margin:0 auto;">
+    Mientras otros equipos aplican K-Means y reportan Silhouette Score, nosotros contaremos la historia de 6,147 mundos desconocidos, encontraremos los que más se parecen a la Tierra, y presentaremos un resultado que el jurado recordará.
+  </div>
+</div>
+
+</div><!-- end main -->
+
+<footer>
+  <p>PRD — ExoData Challenge 2026 · Planetario de Puebla · Feria de Puebla</p>
+  <p style="margin-top:4px;font-size:11px;opacity:0.6;">Dataset: PSCompPars NASA Exoplanet Archive · Metodología: CRISP-DM · Generado: 22 de abril de 2026</p>
+</footer>
+
+<script>
+const canvas = document.getElementById('stars');
+const ctx = canvas.getContext('2d');
+function resize() { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; drawStars(); }
+function drawStars() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  for(let i=0;i<200;i++){
+    const x=Math.random()*canvas.width;
+    const y=Math.random()*canvas.height;
+    const r=Math.random()*1.2;
+    const alpha=Math.random()*0.7+0.3;
+    ctx.beginPath();
+    ctx.arc(x,y,r,0,Math.PI*2);
+    ctx.fillStyle=`rgba(255,255,255,${alpha})`;
+    ctx.fill();
+  }
+}
+resize();
+window.addEventListener('resize', resize);
+</script>
+</body>
+</html>
