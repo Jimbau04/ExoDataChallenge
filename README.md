@@ -1,12 +1,29 @@
 # ExoData Challenge 2026 — Análisis de Exoplanetas
 
+> **ENTREGA: Lunes 27 de abril de 2026 (3 días restantes)**  
+> **Presentación: Miércoles 29 de abril de 2026**  
+> **Fase actual:** Fase 1 (Ingesta y Auditoría) — Retraso de ~2 días respecto al plan
+
+---
+
+| Fecha | Día | Fase planeada | Estado real |
+|-------|-----|---------------|-------------|
+| 22 abr (Mié) | Día 1 | Ingesta, exploración, paquetes | ✅ Completado (parcial) |
+| 23 abr (Jue) | Día 2 | Feature engineering, EDA, imputación | ❌ No iniciado |
+| 24 abr (Vie) | Día 3 | Clustering, PCA, reducción dimensional | ❌ No iniciado |
+| **25 abr (Sáb)** | **Día 4** | **Evaluación métricas, selección final** | ❌ Pendiente |
+| **26 abr (Dom)** | **Día 5** | **Interpretación, HZ, visualizaciones** | ❌ Pendiente |
+| **27 abr (Lun)** | **Día 6** | **Entrega repositorio, ensayo** | **DEADLINE** |
+| 28 abr (Mar) | Día 7 | Ensayos finales | — |
+| 29 abr (Mié) | Día 8 | **PRESENTACIÓN** final | — |
+
+---
+
 ## Descripción del Proyecto
 
 **Objetivo:** Descubrir la taxonomía natural de 6,147 exoplanetas confirmados mediante clustering no supervisado con análisis astrofísico profundo.
 
-**Evento:** Feria de Puebla 2026 — Planetario de Puebla  
-**Fecha de presentación:** 29 de abril de 2026  
-**Entrega de resultados:** 27 de abril de 2026
+**Evento:** Feria de Puebla 2026 — Planetario de Puebla
 
 ## Stack Técnico
 
@@ -53,32 +70,50 @@ renv             # Reproducibilidad
 
 ## Estructura del Repositorio
 
+### Estado actual (24 abril 2026)
+
 ```
 ├── data/
-│   ├── PSCompPars_2026.csv           # Dataset completo (45MB)
-│   ├── processed/                      # Datos procesados
-│   └── imputations/                    # Relaciones de imputación
+│   ├── PSCompPars_2026.csv            ✅ Dataset completo (46MB)
+│   └── Dataset Reducido.csv           ✅ Dataset reducido (4MB)
+├── docs/
+│   ├── tareas_proyecto.md             ✅ Plan de trabajo detallado
+│   ├── project_brief.md               ✅ Brief del proyecto
+│   ├── project_summary.md             ✅ Resumen ejecutivo
+│   ├── top20_completitud.csv          ✅ Reporte de completitud
+│   ├── critical_vars_completitud.csv  ✅ Variables críticas (incluye pl_insol)
+│   ├── detection_method_distribution.csv ✅ Sesgo por método de detección
+│   └── archivos/                      ✅ PDFs de referencia (NASA, guías, PRD)
 ├── notebooks/
-│   ├── 01_ingesta_limpieza.ipynb       # Ingesta y limpieza
-│   ├── 02_analisis_exploratorio.ipynb  # EDA
-│   ├── 03_ingenieria_features.ipynb    # Features derivados
-│   ├── 04_clustering_comparativo.ipynb # Los 4 algoritmos
-│   ├── 05_evaluacion_metricas.ipynb    # Silhouette, DB, CH
-│   ├── 06_interpretacion.ipynb         # Taxonomía astrofísica
-│   └── 07_visualizacion_python.ipynb   # Plots base Python
+│   └── 01_ingesta_limpieza.ipynb      ✅ Fase 1: Ingesta y auditoría
 ├── src/
-│   ├── utils.py                       # Funciones auxiliares
-│   └── imputacion_fisica.py           # Imputación Zeng & Sasselov
+│   └── .gitkeep                       ⬜ Módulos Python pendientes
+├── requirements.txt                   ✅ Dependencias Python
+└── README.md                          ✅ Este archivo
+```
+
+### Pendiente por crear
+
+```
+├── data/
+│   └── processed/                     ⬜ Datos procesados
+├── notebooks/
+│   ├── 02_feature_engineering.ipynb   ⬜ Fase 2: EDA + features derivados
+│   ├── 03_clustering_comparativo.ipynb ⬜ Fase 3-4: 4 algoritmos
+│   ├── 04_evaluacion_modelos.ipynb    ⬜ Fase 5: Métricas
+│   ├── 05_interpretacion.ipynb        ⬜ Fase 6: Taxonomía astrofísica
+│   └── 06_visualizaciones.ipynb       ⬜ Fase 7: Plots base Python
+├── src/
+│   ├── utils.py                       ⬜ Funciones auxiliares
+│   ├── features.py                    ⬜ Feature engineering
+│   ├── imputacion_fisica.py           ⬜ Imputación Zeng & Sasselov
+│   └── clustering.py                  ⬜ Pipeline clustering
 ├── viz_final_r/
-│   └── 08_visualizacion_final.Rmd     # ggplot2 final plots
-├── figures/
-│   ├── diagrama_masa_radio.png       # Output clave
-│   ├── tsne_clusters.png
-│   ├── dendrograma_jerarquico.png
-│   └── candidatos_habitable.png
+│   └── 08_visualizacion_final.Rmd     ⬜ ggplot2 final plots
+├── figures/                           ⬜ Diagramas de salida
 ├── presentation/
-│   └── ExoData_Challenge_2026.pptx    # Presentación
-└── requirements.txt                   # Paquetes Python
+│   └── ExoData_Challenge_2026.pptx    ⬜ Presentación final
+└── .venv/                             ⬜ Entorno virtual (no en git)
 ```
 
 ## Instrucciones de Instalación
@@ -175,15 +210,25 @@ Rstudio viz_final_r/08_visualizacion_final.Rmd
 - **C**lustering: Detección de desierto de Neptuno
 - **T**axonomía: Mapeo directo a literatura astrofísica
 
-## Timeline
+## Progreso y Estado
 
-- **Día 1 (22 abr)**: Ingesta, exploración, instalación paquetes
-- **Día 2 (23 abr)**: Feature engineering, EDA, imputación física
-- **Día 3 (24 abr)**: Clustering, PCA, dimensionality reduction
-- **Día 4 (25 abr)**: Evaluación métricas, selección final
-- **Día 5 (26 abr)**: Interpretación, zona habitable, visualizaciones
-- **Día 6 (27 abr)**: Entrega repositorio, ensayo
-- **Día 7-8 (28-29 abr)**: Presentación final
+### Completado (24 abr 2026)
+- [x] Documentación del proyecto (`docs/tareas_proyecto.md`, `project_brief.md`, `project_summary.md`, `python_vs_r_analysis.md`)
+- [x] PDFs de referencia (NASA, guía astrofísica, PRD)
+- [x] `requirements.txt` con dependencias Python
+- [x] Fase 1: Carga y auditoría del dataset (`notebooks/01_ingesta_limpieza.ipynb`)
+- [x] Reportes CSV: `top20_completitud.csv`, `critical_vars_completitud.csv`, `detection_method_distribution.csv`
+- [x] Auditoría de fallos documentada en `tareas_proyecto.md` (Sección 12)
+
+### Pendiente (prioridad descendente)
+1. **Fase 2** — Feature engineering + imputación física Zeng & Sasselov + RobustScaler
+2. **Fase 3** — PCA (95%) + UMAP + t-SNE
+3. **Fase 4** — K-Means, DBSCAN, GMM, Hierarchical clustering
+4. **Fase 5** — Evaluación (Silhouette, Davies-Bouldin, Calinski-Harabasz, BIC) + modelo final
+5. **Fase 6** — Interpretación astrofísica (taxonomía, sesgos, "Neptune Desert", HZ)
+6. **Fase 7** — Visualizaciones (8 requeridas)
+7. **Fase 8** — Presentación (12-16 slides)
+8. **Fase 9** — Entrega final y ensayo
 
 ## Contacto
 
