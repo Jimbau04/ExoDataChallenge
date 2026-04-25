@@ -1,543 +1,598 @@
-# Plan de Tareas ExoData Challenge 2026
+# Plan de Trabajo Colaborativo - ExoData Challenge 2026
 
-**Documento de Control de Progreso**  
-**Proyecto:** ExoData Challenge — Clustering de Exoplanetas  
-**Plazo Final:** 27 de abril de 2026  
-**Tipo:** Proyecto con checkpoints de verificación por fase
-
----
-
-## 🎯 **ESTRUCTURA DE TAREAS POR FASE**
-
-Cada tarea requiere **checkpoint de verificación** antes de avanzar a la siguiente. No se avanza hasta que el checkpoint se marque como ✓.
+**Proyecto:** ExoData Challenge - Clustering de Exoplanetas  
+**Entrega:** 27 de abril de 2026  
+**Presentacion:** 29 de abril de 2026  
+**Modo de trabajo:** Equipo distribuido, cada integrante en su propia PC  
+**Stack principal:** Python para analisis/modelado, R opcional solo para visualizacion final
 
 ---
 
-## **FASE 0: Setup Inicial (Deadline: 22 abr, 18:00)**
+## 1. Enfoque de Cooperacion
 
-### Tarea 0.1: Configuración del Entorno
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Entorno listo para desarrollo
+Este proyecto no debe depender de una sola computadora ni de un solo entorno virtual compartido. Cada integrante trabaja localmente en su PC, pero todos sincronizan codigo, notebooks, documentacion y resultados mediante GitHub.
 
-- [ ] Instalar Python 3.10+
-- [ ] Crear virtualenv: `python -m venv venv && source venv/bin/activate`
-- [ ] Instalar paquetes: `pip install -r requirements.txt`
-- [ ] Configurar Jupyter: `jupyter notebook --generate-config`
-- [ ] Verificar instalaciones: imports sin errores
+### Entorno recomendado
 
-**Checkpoint ✓:** Ejecutar `01_check_env.ipynb` → todos los imports funcionan
+**Recomendacion principal:** GitHub + entornos locales por integrante.
 
-### Tarea 0.2: Setup GitHub
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Repo inicializado
+- GitHub para codigo, notebooks, documentacion, issues y ramas.
+- Cada integrante crea su propio `.venv` local.
+- El entorno virtual no se sube al repositorio.
+- `requirements.txt` es la fuente comun de dependencias.
+- Los datasets pesados se mantienen en `data/`, pero se documenta de donde salieron.
+- Los resultados compartidos van a `data/processed/`, `figures/` y `docs/`.
+- La presentacion puede vivir en `presentation/`, pero si pesa mucho se comparte tambien por Drive.
 
-- [ ] Crear repositorio público en GitHub
-- [ ] Crear .gitignore apropiado (data/ raw, figures/ outputs)
-- [ ] Push inicial de estructura de carpetas
-- [ ] Compartir enlace con equipo
+## 2. Roles del Equipo
 
-**Checkpoint ✓:** Repo accesible, estructura visible en GitHub
+### Integrante A - Data Lead
 
-### Tarea 0.3: Descarga y Verificación de Dataset
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Datos descargados y verificados
+**Nombre de la parte:** Lider de Datos  
+**Responsabilidad:** ingesta, limpieza, completitud, variables criticas, features derivados e imputacion fisica.
 
-- [ ] Descargar PSCompPars_2026.csv desde NASA Exoplanet Archive
-- [ ] Verificar filas: 6,147 (encontradas)  
-- [ ] Verificar columnas: 320 (encontradas)
-- [ ] Verificar tamaño: ~45MB
-- [ ] Mover a `data/PSCompPars_2026.csv`
+Entregables:
 
-**Checkpoint ✓:** Imprimir `df.shape` → (6147, 320) exactos
+- `notebooks/01_ingesta_limpieza.ipynb`
+- `notebooks/02_feature_engineering.ipynb`
+- `data/processed/df_clean_features.csv` o `.parquet`
+- reportes en `docs/`
 
----
+### Integrante B - ML Lead
 
-## **FASE 1: Ingesta y Exploración (Deadline: 22 abr, 23:59)**
+**Nombre de la parte:** Lider de Machine Learning  
+**Responsabilidad:** escalado, PCA/UMAP, clustering, comparacion de algoritmos y metricas.
 
-### Tarea 1.1: Crear Notebook 01_ingesta_limpieza.ipynb
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Datos limpios cargados en memoria
+Entregables:
 
-- [ ] Leer CSV con comment='#' para saltar líneas de header
-- [ ] Inspeccionar dtypes (verificar float64, int64, object)
-- [ ] Identificar variables clave: pl_rade, pl_bmasse, pl_orbper, pl_eqt, st_teff
-- [ ] Crear listado de completitud por columna: `complete_pct = df.notna().mean()`
-- [ ] Identificar columnas con >60% missing
+- `notebooks/03_clustering_comparativo.ipynb`
+- `notebooks/04_evaluacion_modelos.ipynb`
+- `data/processed/df_labeled.csv`
+- tabla de metricas en `docs/model_metrics.csv`
 
-**Checkpoint ✓:** Mostrar `df.info()` y `df.head()` → datos legibles
+### Integrante C - Astro Lead
 
-### Tarea 1.2: Reporte de Valores Nulos
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Reporte de faltantes estratificado
+**Nombre de la parte:** Lider de Interpretacion Astrofisica  
+**Responsabilidad:** explicar clusters, habitabilidad, sesgos de deteccion, desierto de Neptuno y soporte bibliografico.
 
-- [ ] Generar heatmap de completitud por feature
-- [ ] Identificar 10 variables más completas (>85%)
-- [ ] Identificar 10 variables menos completas (<50%)
-- [ ] Calcular: `critical_vars = ['pl_rade', 'pl_bmasse', 'pl_orbper', 'pl_eqt']`
-- [ ] Verificar completitud de vars críticas: pl_rade (~85%), pl_bmasse (~55%)
+Entregables:
 
-**Checkpoint ✓:** Heatmap visual muestra claramente completitud variables
+- `notebooks/05_interpretacion_astrofisica.ipynb`
+- `docs/cluster_taxonomy.md`
+- `docs/habitability_candidates.csv`
+- citas y referencias usadas en la presentacion
 
-### Tarea 1.3: EDA Básico y Distribuciones
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Caracterización de distribuciones
+### Integrante D - Viz Lead
 
-- [ ] Calcular estadísticas: mean, median, std, q01, q99
-- [ ] Identificar outliers (q99 > 3x q90)
-- [ ] Generar histogramas de vars clave (log-scale)
-- [ ] Detectar sesgo en method detection (80% tránsitos)
+**Nombre de la parte:** Lider de Visualizacion y Presentacion  
+**Responsabilidad:** graficas finales, narrativa visual, slides y ensayo.
 
-**Checkpoint ✓:** Gráficos muestran distribuciones correctas, sin errores
+Entregables:
+
+- `notebooks/06_visualizaciones_python.ipynb`
+- `viz_final_r/08_visualizacion_final.Rmd` si se usa R
+- `figures/`
+- `presentation/ExoData_Challenge_2026.pptx`
 
 ---
 
-## **FASE 2: Feature Engineering (Deadline: 23 abr, 23:59)**
+## 3. Flujo de Trabajo Git para Varias PCs
 
-### Tarea 2.1: Crear 7 Features Derivados
-**Responsable:** Integrante A (Data Lead)  
-**Output:** DataFrame con 320+7 columnas
+### Ramas sugeridas
 
-Crear features físicamente motivados:
-- [ ] `log_period = log10(pl_orbper.clip(0.01))`
-- [ ] `log_rade = log10(pl_rade.clip(0.01))`
-- [ ] `log_bmasse = log10(pl_bmasse.clip(0.01))`
-- [ ] `log_smax = log10(pl_orbsmax.clip(0.0001))`
-- [ ] `pl_dens_calc = (pl_bmasse × 5.972e24) / ((4/3)π(pl_rade×6.371e6)³)/1000`
-- [ ] `mass_radius_ratio = pl_bmasse / pl_rade`
-- [ ] `kepler_check = sqrt(pl_orbsmax³) - pl_orbper² / sqrt(pl_orbsmax³)`
-- [ ] `hz_flag = pl_insol.between(0.2, 1.7).astype(int)`
+- `main`: version estable, solo se integra codigo revisado.
+- `data-lead`: trabajo de limpieza/features.
+- `ml-lead`: trabajo de clustering/modelos.
+- `astro-lead`: interpretacion cientifica.
+- `viz-lead`: visualizaciones y presentacion.
 
-**Checkpoint ✓:** Verificar que nuevas columnas existen y tienen valores razonables (densidad ~1-10 g/cm³)
+### Rutina diaria minima
 
-### Tarea 2.2: Imputación Física de Masa/Radio
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Dataset con valores imputados físicamente
+1. Antes de trabajar: `git pull origin main`
+2. Trabajar en la rama personal.
+3. Guardar cambios con commits pequenos y claros.
+4. Subir cambios: `git push origin nombre-rama`
+5. Integrar a `main` solo cuando el entregable corra o sea revisable.
 
-Implementar relación M-R de Zeng & Sasselov (2016):
-- [ ] Para planetas rocosos (pl_rade < 1.5): ρ ≈ 5.5 g/cm³
-- [ ] Formula: pl_bmasse_imputed = pl_rade³ × 5.5 / 5.972
-- [ ] Para gaseosos (pl_rade > 2.0): ρ ≈ 1.0 g/cm³
-- [ ] Marcar con flag: `pl_bmasse_imputed = 1`
+### Convencion de commits
 
-**Checkpoint ✓:** Comparar imputados vs originales → valores físicamente consistentes
+Usar mensajes simples:
 
-### Tarea 2.3: Selección de Features Finales
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Lista final de 8-10 features para clustering
+- `docs: actualizar plan colaborativo`
+- `feat: agregar features fisicos`
+- `feat: implementar clustering kmeans gmm`
+- `fix: corregir rutas de notebooks`
+- `viz: agregar figura masa-radio`
 
-Seleccionar variables con >70% completitud y relevancia física:
-- [ ] `log_rade`
-- [ ] `log_bmasse` (con imputación)
-- [ ] `log_period`
-- [ ] `log_smax`
-- [ ] `pl_eqt`
-- [ ] `st_teff`
-- [ ] `st_met`
-- [ ] `sy_pnum`
-- [ ] `kepler_check`
-- [ ] `hz_flag`
+### Regla importante sobre notebooks
 
-**Checkpoint ✓:** Verificar completitud de features seleccionadas >70%  
-**Checkpoint ✓:** Mostrar correlación entre features → alta correlación debe justificarse
+Evitar que dos personas editen el mismo notebook al mismo tiempo. Los notebooks generan conflictos dificiles de resolver.
+
+Mejor:
+
+- Cada lider trabaja su propio notebook.
+- La logica repetida va a `src/`.
+- Los resultados compartidos se exportan a CSV/parquet.
 
 ---
 
-## **FASE 3: Preparación para Clustering (Deadline: 24 abr, 12:00)**
+## 4. Setup Realista por Integrante
 
-### Tarea 3.1: Crear Dataset Limpio
-**Responsable:** Integrante A (Data Lead)  
-**Output:** `data/processed/df_clean_8features.parquet` (1.2MB)
+Cada integrante hace su propio entorno local.
 
-- [ ] Filtrar solo filas con suficientes datos (no >50% missing)
-- [ ] Seleccionar features finales
-- [ ] Guardar en formato parquet (rápido, comprimido)
-- [ ] Verificar tamaño y estructura
+### Windows PowerShell
 
-**Checkpoint ✓:** `pd.read_parquet()` carga sin errores
+```powershell
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-### Tarea 3.2: Escalado Robusto
-**Responsable:** Integrante A (Data Lead)  
-**Output:** X_scaled array
+### macOS/Linux
 
-- [ ] Implementar RobustScaler: scala con mediana + IQR
-- [ ] Ajustar solo en training set (si hay partición)
-- [ ] Verificar que outliers no dominan magnitudes
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+pip install -r requirements.txt
+```
 
-**Checkpoint ✓:** Stats: `median ≈ 0`, `IQR ≈ 1`, `max < 10`  
-**Checkpoint ✓:** Visualizar boxplot antes/después → outliers mantenidos relativamente
+### Checkpoint de entorno
 
-### Tarea 3.3: Reducción Dimensional (PCA)
-**Responsable:** Integrante B (ML Lead)  
-**Output:** X_pca (n_components que retienen 95% varianza)
+El entorno esta listo si estos imports funcionan:
 
-- [ ] Ejecutar PCA con `n_components=0.95`
-- [ ] Verificar que varianza explicada ≈ 95%
-- [ ] Verificar número de componentes (probablemente 6-8)
-- [ ] Generar scree plot
+```python
+import pandas as pd
+import numpy as np
+import sklearn
+import matplotlib.pyplot as plt
+import seaborn as sns
+```
 
-**Checkpoint ✓:** Scree plot muestra codo claro después de 6-8 componentes  
-**Checkpoint ✓:** Varianza acumulada gráfica muestra 95%
-
-### Tarea 3.4: Reducción Dimensional (UMAP)
-**Responsable:** Integrante B (ML Lead)  
-**Output:** X_umap (2D para visualización)
-
-- [ ] Ejecutar UMAP: `UMAP(n_components=2, random_state=42)`
-- [ ] Ajustar parámetros: `n_neighbors=30, min_dist=0.1`
-- [ ] Verificar visualización: separación de clusters visible
-
-**Checkpoint ✓:** Scatter plot UMAP → clusters potencialmente visibles  
-**Checkpoint ✓:** Ejecución < 60 segundos (vs 15 min de t-SNE)
+`umap` puede ser opcional hasta la fase de reduccion dimensional.
 
 ---
 
-## **FASE 4: Modelado - Clustering (Deadline: 25 abr, 12:00)**
+## 5. Estructura de Carpetas Objetivo
 
-### Tarea 4.1: Implementar 4 Algoritmos
-**Responsable:** Integrante B (ML Lead)  
-**Output:** Diccionario con resultados `results = {'kmeans': {...}, 'dbscan': {...}, 'gmm': {...}, 'hier': {...}}`
+```text
+ExoDataChallenge/
+├── data/
+│   ├── PSCompPars_2026.csv
+│   ├── Dataset Reducido.csv
+│   └── processed/
+├── docs/
+│   ├── tareas_proyecto.md
+│   ├── project_brief.md
+│   ├── project_summary.md
+│   ├── cluster_taxonomy.md
+│   └── model_metrics.csv
+├── figures/
+├── notebooks/
+│   ├── 01_ingesta_limpieza.ipynb
+│   ├── 02_feature_engineering.ipynb
+│   ├── 03_clustering_comparativo.ipynb
+│   ├── 04_evaluacion_modelos.ipynb
+│   ├── 05_interpretacion_astrofisica.ipynb
+│   └── 06_visualizaciones_python.ipynb
+├── presentation/
+├── src/
+│   ├── utils.py
+│   ├── features.py
+│   ├── imputation.py
+│   └── clustering.py
+├── viz_final_r/
+├── README.md
+└── requirements.txt
+```
 
-Implementar en paralelo:
-- [ ] **K-Means**: Probar k=3-10, usar `n_init=20`
-- [ ] **DBSCAN**: Calcular eps con k-distografía, `min_samples=10`
-- [ ] **GMM**: Probar componentes 3-10, usar BIC
-- [ ] **Hierarchical**: Usar Ward's method
-
-**Checkpoint ✓** Cada algoritmo ejecuta sin errores  
-**Checkpoint ✓** Colectar labels en DataFrame: `df['kmeans_labels']`, `df['dbscan_labels']`, etc.
-
-### Tarea 4.2: Optimización de Hiperparámetros
-**Responsable:** Integrante B (ML Lead)  
-**Output**: K/Best params óptimos para cada algoritmo
-
-- [ ] K-Means: Elbow method + Silhouette → elegir K óptima
-- [ ] DBSCAN: Grid search eps [0.1, 0.3, 0.5, 0.7]
-- [ ] GMM: Minimizar BIC → K óptima
-- [ ] Hierarchical: Cortar árbol en K óptima
-
-**Checkpoint ✓** Gráfico elbow muestra codo claro  
-**Checkpoint ✓** Silhouette score indica K óptima (máximo)
-
-### Tarea 4.3: Calcular Métricas de Evaluación
-**Responsable:** Integrante B (ML Lead)  
-**Output:** DataFrame comparativo con métricas
-
-Para cada algoritmo calcular:
-- [ ] Silhouette Score (higher better)
-- [ ] Davies-Bouldin Index (lower better)
-- [ ] Calinski-Harabasz (higher better)
-- [ ] Para GMM: BIC (lower better)
-
-**Checkpoint ✓** Tabla comparativa muestra valores numéricos  
-**Checkpoint ✓** Al menos 1 algoritmo tiene Silhouette > 0.35 (umbral aceptable)
+No todas las carpetas tienen que existir desde el dia 1, pero esta es la estructura hacia la entrega.
 
 ---
 
-## **FASE 5: Selección del Modelo (Deadline: 25 abr, 18:00)**
+## 6. Plan por Fases con Checkpoints Cortos
 
-### Tarea 5.1: Análisis Comparativo de Algorithmos
-**Responsable:** Integrante B (ML Lead)  
-**Output:** Tabla de decisión con valores, pros/cons
+### Fase 0 - Coordinacion Inicial
 
-- [ ] Crear tabla: Algoritmo | Silhouette | DB-Index | Tiempo | Interpretabilidad
-- [ ] Evaluar cualitativo: K-Means = simple, GMM = probabilístico, DBSCAN = outliers, Hierarchical = dendrograma
-- [ ] Aplicar criterio decisión: 70% métricas + 30% interpretación física
+**Responsables:** Todo el equipo  
+**Objetivo:** que todos puedan abrir el proyecto y trabajar sin pisarse.
 
-**Checkpoint ✓** Documento de decisión justifica selección con evidencia numérica  
-**Checkpoint ✓** Votación del equipo (documentar decisión)
+Tareas:
 
-### Tarea 5.2: Selección del Algoritmo Final
-**Responsable:** Integrante B (ML Lead)  
-**Decision Owner:** Todo el equipo (consenso)  
-**Output:** Algoritmo elegido + hiperparámetros finales
+- [ ] Confirmar quien es Data Lead, ML Lead, Astro Lead y Viz Lead.
+- [x] Confirmar que todos tienen acceso al repo.
+- [x] Crear `.gitignore` con `.venv/`, checkpoints y cache.
 
-- [ ] Elegir algoritmo final (ej: GMM con 6 clusters)
-- [ ] Fijar K final (ej: K=6)
-- [ ] Ejecutar modelo final en dataset completo
-- [ ] Exportar labels: `df['cluster_id']`
-
-**Checkpoint ✓** Labels asignados a todas las 6,147 filas  
-**Checkpoint ✓** Distribución: ningún cluster < 5% del dataset (evita tiny clusters)
-
-### Tarea 5.3: Visualización 2D (PCA o UMAP) con clusters
-**Responsable:** Integrante B (ML Lead)  
-**Output:** Scatter plots coloreados por cluster
-
-- [ ] Generar UMAP 2D coloreado por cluster_id
-- [ ] Generar t-SNE 2D coloreado por cluster_id
-- [ ] Verificar separación visual clara
-
-**Checkpoint ✓** Plots muestran clusters claramente separados  
-**Checkpoint ✓** Colores distinguibles para presentación
+**Checkpoint corto:** cada integrante puede ejecutar imports basicos y hacer `git pull`.
 
 ---
 
-## **FASE 6: Interpretación Astrofísica (30 puntos, más caro!) (Deadline: 26 abr, 12:00)**
+### Fase 1 - Ingesta y Auditoria de Datos
 
-### Tarea 6.1: Caracterizar Clusters con Estadísticos
-**Responsable:** Integrante C (Astro Lead)  **Output:** CSV con properties por cluster
+**Responsable principal:** Data Lead  
+**Apoyo:** Astro Lead valida que las variables tengan sentido fisico.
 
-Para cada cluster (ej: cluster 0, cluster 1...):
-- [ ] Calcular mediana de: radio, masa, periodo, temperatura
-- [ ] Calcular desviación estándar (indica homogeneidad)
-- [ ] Contar frecuencia por método de detección
-- [ ] Calcular proporción de planetas en zona habitable
+Tareas:
 
-**Checkpoint ✓** Tabla: Cada cluster tiene radio típico, periodo típico, temp típica  
-**Checkpoint ✓** Interpretación inicial: "Cluster 0 ≈ Hot Jupiters (periodo corto)
+- [x] Leer `data/PSCompPars_2026.csv` ignorando comentarios.
+- [x] Confirmar shape real del dataset (`6160 x 320`).
+- [ ] Identificar variables criticas (pendiente incluir `pl_insol` en el reporte de variables criticas).
+  - `pl_name`
+  - `discoverymethod`
+  - `pl_rade`
+  - `pl_bmasse`
+  - `pl_orbper`
+  - `pl_orbsmax`
+  - `pl_eqt`
+  - `pl_insol`
+  - `st_teff`
+  - `st_met`
+  - `sy_pnum`
+- [x] Generar reporte de completitud.
+- [x] Revisar distribucion por metodo de deteccion.
+- [x] Detectar outliers extremos sin eliminarlos todavia.
 
-### Tarea 6.2: Mapear a Taxonomía Astrofísica
-**Responsable:** Integrante C (Astro Lead)  
-**Output:** Asignar cada cluster a tipo físico conocido
+Entregables:
 
-- [ ] Cluster 0 → Hot Jupiter (radio > 10 R⊕, periodo < 10 días)
-- [ ] Cluster 1 → Super-Tierras (1.25-2.0 R⊕, densa)
-- [ ] Cluster 2 → Sub-Neptunos (2.0-4.0 R⊕, abundante)
-- [ ] Cluster 3 → Terrestres rocosas (< 1.25 R⊕)
-- [ ] Cluster 4 → Gigantes fríos (periodo largo)
-- [ ] Cluster -1 → Anómalos (outliers DBSCAN)
+- `notebooks/01_ingesta_limpieza.ipynb`
+- `docs/top20_completitud.csv`
+- `docs/critical_vars_completitud.csv`
+- `docs/detection_method_distribution.csv`
 
-**Checkpoint ✓** Cada cluster mapeado a definición física con threshold numérico  
-**Checkpoint ✓** Documentar discrepancias (si cluster no mapea bien, explicar)
+**Checkpoint corto:** [ ] dataset carga sin error, shape documentado y variables criticas tienen reporte de completitud.
 
-### Tarea 6.3: Análisis de Habitabilidad
-**Responsable:** Integrante C (Astro Lead)  
-**Output:** Lista de top 5 planetas candidatos
+Estado actual rapido:
 
-- [ ] Filtrar: pl_insol entre 0.2-1.7 AND pl_eqt 200-320K
-- [ ] Filtrar: pl_rade < 2.0 (potencialmente rocoso)
-- [ ] Ordenar por proximidad a insol = 1.0 (Earth-like)
-- [ ] Listar: nombre, estrella, insolación, temp, radio
-
-**Checkpoint ✓** Top 5 planetas listados con motivación física  
-**Checkpoint ✓** Todos deben ser conocidos (no nombrar nuevos planetas)
-
-### Tarea 6.4: Verificar Consistencia Con Literatura
-**Responsable:** Integrante C (Astro Lead)  
-**Output:** 2-3 citas por cada tipo planetario
-
-- [ ] Hot Jupiters: WASP-12b, 51 Peg b (periodo corto, radiación)
-- [ ] Super-Tierras: Kepler-62e, 55 Cnc e (estudios de composición)
-- [ ] Sub-Neptunos: Kepler-11f (mechanismos formación)
-- [ ] Documentar: relación M-R de Zeng & Sasselov (2016)
-
-**Checkpoint ✓** Bibliografía citada correctamente (autor, año, journal)  
-**Checkpoint ✓** Cada claim en interpretación debe tener cita
-
-### Tarea 6.5: Detección del Desierto de Neptuno
-**Responsable:** Integrante C (Astro Lead)  **Output:** Validez del Hallazgo Importante
-
-- [ ] Verificar: pocas detecciones con periodo < 3 días AND radio 2-4 R⊕
-- [ ] Contar: < 30 planetas en esa región (frente a ~3000 en otros)
-- [ ] Confirmar: clustering captura esta zona vacía
-- [ ] Referenciar: Fulton et al. (2017) sobre brecha de radios
-
-**Checkpoint ✓** Documentar el desierto en notebook  **Checkpoint ✓ ** Comparación con literatura actual (2017-2024)
+- Carga y auditoria basica completadas.
+- Los CSV de `docs/` existen, pero el notebook muestra errores por ruta de guardado al usar `docs/...` desde `notebooks/`.
+- Falta incluir `pl_insol` en el reporte de variables criticas para cerrar Fase 1 al 100%.
 
 ---
 
-## **FASE 7: Visualización (Deadline: 26 abr, 18:00)**
+### Fase 2 - Limpieza y Feature Engineering
 
-### Tarea 7.1: Crear 8 Visualizaciones Clave
-**Responsable:** Integrante D (Viz Lead)  
-** Output:** 8 plots PNG en `figures/` (300 DPI, 1200px)
+**Responsable principal:** Data Lead  
+**Apoyo:** ML Lead revisa que las features sirvan para clustering.
 
-**En Python (base):**
-- [ ] Diagrama de calor de correlaciones
-- [ ] Histogramas de features antes/después log
-- [ ] PCA variance explained
-- [ ] Boxplots de features por cluster
-- [ ] Scatter periodo-radio (despues log)
+Tareas:
 
-**En R (final, nivel publicación):**
-- [ ] Diagrama masa-radius (log-log, coloreado por cluster, con lineas teoricas)
-- [ ] UMAP 2D coloreado por cluster
-- [ ] Dendrograma jerárquico (ward)
-- [ ] Mapa zona habitable (insolación vs radio)
+- Corregir rutas de notebooks para que funcionen desde la carpeta del proyecto.
+- Crear features derivados:
+  - `log_period`
+  - `log_rade`
+  - `log_bmasse`
+  - `log_smax`
+  - `pl_dens_calc`
+  - `mass_radius_ratio`
+  - `hz_flag`
+- Imputar masa/radio solo cuando tenga sentido fisico.
+- Agregar flags para saber que fue imputado.
+- Seleccionar 8-10 features finales.
+- Exportar dataset procesado.
 
-**Checkpoint ✓ ** Todos los plots guardados en `figures/` 300 DPI  **Checkpoint ✓** Cada plot tiene: título, ejes etiquetados, leyenda, fuente de datos
+Entregables:
 
-### Tarea 7.2: Crear Notebook de Visualización en R
-** Responsable:** Integrante D (Viz Lead)  
-**Output:** `viz_final_r/08_visualizacion_final.Rmd`
+- `notebooks/02_feature_engineering.ipynb`
+- `src/features.py`
+- `src/imputation.py`
+- `data/processed/df_clean_features.csv` o `.parquet`
 
-- [ ] Importar `data/processed/df_labeled.csv`
-- [ ] Generar los 4 plots finales con ggplot2
-- [ ] Aplicar themes profesionales (ggthemes::theme_few)
-- [ ] Exportar PNGs a `figures/` con 300 DPI
-
-**Checkpoint ✓** Notebook R ejecuta sin errores  **Checkpoint ✓** PNGs generados son usables en presentación
-
-### Tarea 7.3: Agregar a Presentación
-**Responsable:** Integrante D (Viz Lead)  
-**Output:** Slides PowerPoint/Keynote
-
-- [ ] Insertar PNGs en slides correspondientes
-- [ ] Agregar anotaciones explicativas
-- [ ] Asegurar calidad (no comprimido)
-
-**Checkpoint ✓** Abrir PPT → imágenes son claras, no pixeladas  **Checkpoint ✓** Todos los 8 plots incluidos
+**Checkpoint corto:** el archivo procesado existe, carga en otra PC y no contiene NaN en las features finales.
 
 ---
 
-## **FASE 8: Preparación de Presentación (Deadline: 27 abr, 12:00)**
+### Fase 3 - Preparacion para Modelado
 
-### Tarea 8.1: Crear Estructura de Slides (16 slides)
-**Responsable:** Integrante D (Viz Lead)  
-Output: `.pptx` completo
+**Responsable principal:** ML Lead  
+**Apoyo:** Data Lead valida que no se rompan las variables.
 
-- [ ] Slide 1: Título + hook
-- [ ] Slide 2-3: Comprensión del problema y datos
-- [ ] Slide 4-6: Preparación y feature engineering
-- [ ] Slide 7-9: Modelado y clustering
-- [ ] Slide 10-13: Interpretación (30 pts de evaluación) ← **MÁS IMPORTANTE**
-- [ ] Slide 14-15: Limitaciones y propuestas
-- [ ] Slide 16: Conclusiones
+Tareas:
 
-**Checkpoint ✓** Presentación completa (16 slides)  **Checkpoint ✓** Cada slide tiene contenido, no placeholders
+- Cargar `df_clean_features`.
+- Escalar con `RobustScaler`.
+- Ejecutar PCA para conservar cerca de 95% de varianza.
+- Generar UMAP 2D para visualizacion.
+- Guardar matrices o columnas reducidas si son necesarias.
 
-### Tarea 8.2: Ensayar Presentación
-** Responsable:** Todo el equipo  
-**Output:** Tiempo ajustado a 12-15 minutos
+Entregables:
 
-- [ ] Cada integrante presenta su sección (1-2 min cada uno)
-- [ ] Cronometrar duración total
-- [ ] Ajustar velocidad si excede 15 min
-- [ ] Practicar transiciones suaves
+- `notebooks/03_clustering_comparativo.ipynb`
+- columnas PCA/UMAP en dataset procesado o archivos auxiliares
 
-**Checkpoint ✓ ** Tiempo total: 12-15 min (acceptable)  **Checkpoint ✓ ** Todos los integrantes lo han ensayado
-
-### Tarea 8.3: Validación Final del Repo
-** Responsable:** Todo el equipo  
-**Output:** Repo reproducible
-
-- [ ] Revisar que `requirements.txt` esté completo
-- [ ] Revisar que `renv.lock` (para R) esté documentado
-- [ ] Verificar que todos los notebooks ejecutan sin errores
-- [ ] Verificar que README.md está actualizado
-- [ ] Ejecutar **full pipeline** desde cero en orden: 01→02→03→04→05→06→07
-
-**Checkpoint ✓ ** Notebook `00_full_pipeline.ipynb` ejecuta sin errores  **Checkpoint ✓ ** README.md refleja stack actual (Python + R solo viz)
+**Checkpoint corto:** escalado, PCA y UMAP corren sin error y producen salidas con el mismo numero de filas que el dataset limpio.
 
 ---
 
-## ** FASE 9: Entrega (Deadline: 27 abr, 23:59)**
+### Fase 4 - Clustering Comparativo
 
-### Tarea 9.1: Push Final a GitHub
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Repo final público
+**Responsable principal:** ML Lead  
+**Apoyo:** Astro Lead revisa si los grupos tienen sentido fisico.
 
-- [ ] Commit final: "feat: entrega versión 1.0 - ExoData Challenge 2026"
-- [ ] Push con tags: `git tag v1.0 && git push origin v1.0`
-- [ ] Verificar en GitHub que todos los archivos están presentes
-- [ ] Compartir enlace con jurado
+Tareas:
 
-**Checkpoint ✓** Repo accesible en GitHub  **Checkpoint ✓ ** Tags creados correctamente
+- Probar K-Means con varios valores de K.
+- Probar Gaussian Mixture Models con BIC.
+- Probar DBSCAN para detectar outliers.
+- Probar clustering jerarquico si el tiempo/memoria lo permite.
+- Guardar labels por algoritmo.
+- Comparar resultados con metricas.
 
-### Tarea 9.2: Preparar Entrega de Slides
-** Responsable:** Integrante D (Viz Lead)  
-**Output:** Archivo .pptx final
+Metricas minimas:
 
-- [ ] Exportar desde Keynote/PowerPoint a PDF (backup)
-- [ ] Exportar PPT en formato compatible (Office 2016+)
-- [ ] Verificar que imágenes están embebidas (no enlaces rotos)
-- [ ] Subir a Google Drive compartido con equipo
+- Silhouette Score
+- Davies-Bouldin Index
+- Calinski-Harabasz Score
+- BIC para GMM
 
-**Checkpoint ✓** PPT abre en otra máquina sin errores  **Checkpoint ✓ ** Todos los plots visibles
+Entregables:
 
-### Tarea 9.3: Preparación de Backup
-**Responsable:** Integrante A (Data Lead)  
-**Output:** Backup local
+- `notebooks/03_clustering_comparativo.ipynb`
+- `notebooks/04_evaluacion_modelos.ipynb`
+- `docs/model_metrics.csv`
 
-- [ ] Zip completo de repo: `exodata-challenge-2026.zip`
-- [ ] Copiar a 2 USB drives
-- [ ] Subir a Google Drive personal
-- [ ] Guardar en laptop de presentación
-
-**Checkpoint ✓** Zip extraído y probado en otra computadora  **Checkpoint ✓ ** Todos los archivos presentes en backup
+**Checkpoint corto:** al menos tres algoritmos corren, hay tabla de metricas y se puede justificar un modelo final.
 
 ---
 
-## ** CONTROLES DE CALIDAD POST-ENTREGA **
+### Fase 5 - Seleccion del Modelo Final
 
-### Checkpoint Global (Antes de Cada Checkpoint)
-Antes de preguntar si un checkpoint está ✓, verifica:
+**Responsables:** ML Lead + Astro Lead  
+**Decision:** equipo completo.
 
-1. ** ¿Funciona? ** Ejecuta la celda/código → ¿resultado esperado?
-2. ** ¿Tiene sentido? ** Los valores son razonables (densidad < 20 g/cm³)
-3. ** ¿Es reproducible? ** Correr de nuevo → ¿mismo resultado?
-4. ** ¿Está documentado? ** Cada función/plot tiene su explicación
-5. ** ¿Sigue en tiempo? ** ¿No excede deadline de su fase?
+Tareas:
 
----
+- Elegir algoritmo final.
+- Definir numero de clusters o parametros finales.
+- Crear columna `cluster_id`.
+- Exportar dataset final etiquetado.
+- Verificar distribucion de clusters.
 
-## ** SUPER-IMPORTANTE: RELACIONES ENTRE TAREAS**
+Entregables:
 
-### Bloqueantes
-- **No puedes empezar FASE 2** sin el **Checkpoint de FASE 1** (faltantes reportados)
-- **No puedes empezar FASE 4** sin **Checkpoint de FASE 3** (features limpias)
-- **No puedes empezar FASE 6** sin **Checkpoint de FASE 5** (modelo final elegido)
-- **No puedes empezar FASE 8** sin **Checkpoint de FASE 6** (interpretación aprobada por Astro Lead)
+- `data/processed/df_labeled.csv`
+- `docs/model_decision.md`
 
-### Dependencias
-- FASE 1 → FASE 2 (clean data)
-- FASE 2 → FASE 3 (engineered features)
-- FASE 3 → FASE 4 (scaled data)
-- FASE 4 → FASE 5 (cluster results)
-- FASE 5 → FASE 6 (labels for interpretation)
-- FASE 6 → FASE 7 (plots based on interpretation)
-- FASE 7 → FASE 8 (slides con plots)
+**Checkpoint corto:** cada planeta tiene `cluster_id` y la decision del modelo esta explicada con metricas y sentido fisico.
 
 ---
 
-## **GANAS PUNTOS CON ESTOS CHECKPOINTS**
+### Fase 6 - Interpretacion Astrofisica
 
-**Cada checkpoint ✓ garantiza puntos en el challenge:**
+**Responsable principal:** Astro Lead  
+**Apoyo:** ML Lead y Data Lead.
 
-- 6.3 (Habitabilidad) →  **+7pts**  
-- 6.4 (Verificación literatura) → **+7pts**  
-- 6.5 (Desierto Neptuno) → **+6pts**  
-- 8.1 (CRISP-DM) → **+8pts**  
-- 8.2 (Comunicación) → **+8pts**  
-- Todos los demás → **+64pts**  
-- **Total cumplido**: **30 + 20 + 20 + 10 + 10 + 10 = 100pts** ✓
+Tareas:
 
----
+- Calcular medianas por cluster:
+  - radio
+  - masa
+  - periodo
+  - temperatura
+  - insolacion
+- Mapear clusters a posibles tipos:
+  - terrestres
+  - super-Tierras
+  - sub-Neptunos
+  - Hot Jupiters
+  - gigantes frios
+  - outliers/anomalos
+- Analizar sesgo por metodo de deteccion.
+- Identificar candidatos habitables.
+- Revisar si aparece el desierto de Neptuno.
+- Agregar 2-3 referencias cientificas clave.
 
-## **CHECKLIST DE REVISIÓN FINAL**
+Entregables:
 
-Antes de entrega, el equipo completo debe marcar ✓:
+- `notebooks/05_interpretacion_astrofisica.ipynb`
+- `docs/cluster_taxonomy.md`
+- `docs/habitability_candidates.csv`
 
-- [ ] **Reproducibilidad completa**: Notebook `00_run_all.ipynb` ejecuta sin errores de 01 a 07
-- [ **Data leakage comprobada**: Pipeline garantiza separación train/test
-- [ ] **Outliers robustos**: RobustScaler usado, StandardScaler no
-- [ ] **4 algoritmos implementados**: K-Means, DBSCAN, GMM, Hierarchical
-- [ ] **Interpretación documentada**: Story por cluster con bibliografía
-- [ ] **Habitabilidad identificada**: Top 5 planetas listados
-- [ ] **Desierto de Neptuno**: Documentado con thresholds
-- [ ] **Visualizaciones finales**: 8 plots generados (4 Python base + 4 R elegantes)
-- [ ] **Slides completas**: 16 slides, tiempo 13 min (practicado)
-- [ ] **Repo entregado**: GitHub público, tag v1.0, backup en 2 ubicaciones
-
----
-
-## **SI FALLA UN CHECKPOINT**
-
-**No avanzar sin ✓** → Implica volver a trabajar la tarea anterior:
-
-- **Si heatmap de completitud no carga**: Revisar lectura de CSV (FASE 1)
-- **Si RobustScaler genera NaNs**: Revisar outliers extremales (FASE 2)
-- **Si silhouette es < 0.30**: Re-evaluar selección de features (FASE 3)
-- **Si clusters no mapean a física**: Re-interpretar (FASE 6)
-- **Si plots R no generan**: Verificar paths de datos exportados (FASE 7)
-
-**Regla dura**: **30% de tareas con X = proyecto en riesgo de reprobar**  
-**Solución**: **Reparar checkpoint antes de avanzar**
+**Checkpoint corto:** cada cluster tiene nombre fisico, estadisticas y una explicacion defendible.
 
 ---
 
-## **Final Notes**
+### Fase 7 - Visualizaciones
 
-Documento mantenido por: **Data Lead**  
-Última actualización: 24 de abril de 2026  
-Próxima revisión: Después de cada tarea completada
+**Responsable principal:** Viz Lead  
+**Apoyo:** todos revisan claridad.
+
+Tareas:
+
+- Crear graficas base en Python.
+- Crear graficas finales en R solo si aporta calidad y hay tiempo.
+- Exportar figuras en alta resolucion.
+
+Graficas prioritarias:
+
+- Masa-radio por cluster.
+- UMAP/PCA por cluster.
+- Periodo-radio para mostrar zonas vacias o patrones.
+- Boxplots de variables por cluster.
+- Mapa de habitabilidad.
+- Distribucion de metodo de deteccion por cluster.
+
+Entregables:
+
+- `notebooks/06_visualizaciones_python.ipynb`
+- `figures/*.png`
+- `viz_final_r/08_visualizacion_final.Rmd` si aplica
+
+**Checkpoint corto:** hay minimo 5 figuras claras, guardadas en `figures/`, listas para slides.
+
+---
+
+### Fase 8 - Presentacion
+
+**Responsable principal:** Viz Lead  
+**Apoyo:** todo el equipo.
+
+Tareas:
+
+- Armar presentacion de 12-16 slides.
+- Repartir quien presenta cada parte.
+- Ensayar con cronometro.
+- Ajustar historia para 10-15 minutos.
+
+Estructura sugerida:
+
+1. Problema y objetivo.
+2. Dataset y variables.
+3. Limpieza y features.
+4. Modelos comparados.
+5. Modelo elegido.
+6. Interpretacion de clusters.
+7. Habitabilidad.
+8. Hallazgos importantes.
+9. Limitaciones.
+10. Conclusiones.
+
+Entregables:
+
+- `presentation/ExoData_Challenge_2026.pptx`
+- PDF de respaldo
+
+**Checkpoint corto:** presentacion abre en otra PC, dura menos de 15 minutos y cada integrante sabe su parte.
+
+---
+
+### Fase 9 - Entrega Final
+
+**Responsable:** todo el equipo, con un integrador final.
+
+Tareas:
+
+- Verificar que README esta actualizado.
+- Verificar que los notebooks principales corren o tienen outputs confiables.
+- Revisar que no se subio `.venv`.
+- Hacer commit final.
+- Subir tag o release si aplica.
+- Guardar backup del repo y presentacion.
+
+**Checkpoint corto:** repo limpio, presentacion lista, datos/figuras clave incluidos y backup probado.
+
+---
+
+## 7. Dependencias entre Integrantes
+
+Para evitar bloqueos:
+
+- Data Lead debe entregar `df_clean_features` antes de que ML Lead cierre clustering.
+- ML Lead debe entregar `df_labeled` antes de que Astro Lead cierre interpretacion.
+- Astro Lead debe entregar nombres de clusters antes de que Viz Lead cierre graficas finales.
+- Viz Lead puede avanzar en plantilla, estilo y slides aunque aun no esten todos los datos finales.
+
+Trabajo que puede hacerse en paralelo:
+
+- Astro Lead puede investigar taxonomias y referencias desde el inicio.
+- Viz Lead puede preparar estructura de slides desde el inicio.
+- ML Lead puede crear funciones de clustering con un dataset de prueba.
+- Data Lead puede limpiar y exportar versiones incrementales.
+
+---
+
+## 8. Criterios de Calidad
+
+Antes de considerar una fase terminada:
+
+- El notebook corre desde arriba hasta abajo o tiene instrucciones claras.
+- Las rutas son relativas al proyecto, no a una PC especifica.
+- El output principal se guarda en una carpeta compartida del repo.
+- Las variables tienen nombres consistentes.
+- Las decisiones importantes quedan documentadas.
+- Los resultados tienen sentido fisico, no solo estadistico.
+
+---
+
+## 9. Riesgos Reales y Mitigacion
+
+### Riesgo: conflictos en notebooks
+
+Mitigacion:
+
+- Un notebook por responsable.
+- No editar notebooks ajenos sin avisar.
+- Mover funciones reutilizables a `src/`.
+
+### Riesgo: cada PC tiene paquetes diferentes
+
+Mitigacion:
+
+- Usar `requirements.txt`.
+- Documentar version de Python usada.
+- No subir `.venv`.
+
+### Riesgo: dataset con shape diferente
+
+Mitigacion:
+
+- Documentar shape real del CSV usado.
+- Guardar fecha/fuente de descarga.
+- No asumir que siempre son 6,147 planetas si el archivo actual tiene otro numero.
+
+### Riesgo: falta de tiempo para R
+
+Mitigacion:
+
+- Python produce todas las graficas necesarias.
+- R queda como mejora estetica opcional.
+
+### Riesgo: clustering estadisticamente bueno pero fisicamente malo
+
+Mitigacion:
+
+- Astro Lead revisa clusters antes de cerrar modelo.
+- La decision final usa metricas y sentido fisico.
+
+---
+
+## 10. Checklist Final Compacto
+
+- [ ] Todos pueden correr el entorno local.
+- [x] Dataset principal carga y su shape esta documentado.
+- [ ] Existe dataset procesado con features finales.
+- [ ] Hay comparacion de minimo tres algoritmos.
+- [ ] Hay modelo final con `cluster_id`.
+- [ ] Cada cluster tiene interpretacion astrofisica.
+- [ ] Hay candidatos habitables documentados.
+- [ ] Hay minimo 5 figuras listas para presentacion.
+- [ ] La presentacion dura menos de 15 minutos.
+- [ ] README y repo estan limpios para entrega.
+
+---
+
+## 12. Fallas Detectadas en la Auditoria (24-abr-2026)
+
+Prioridad alta (corregir primero):
+
+1. El notebook `notebooks/01_ingesta_limpieza.ipynb` intenta guardar en `docs/...` y falla al ejecutarse desde la carpeta `notebooks/`; debe usar `../docs/...` o rutas construidas con `pathlib`.
+2. El listado de variables criticas en el notebook no incluye `pl_insol`, pero el plan de Fase 1 si lo exige.
+3. El README documenta una estructura y entregables que aun no existen (varios notebooks de fases 2-7, modulos en `src/`, `figures/`, `presentation/`, `viz_final_r/`), lo que puede confundir al equipo.
+
+Prioridad media:
+
+1. `src/` no tiene modulos implementados todavia, lo que dificulta reutilizar logica y evitar conflictos entre notebooks.
+2. No existe aun `data/processed/` ni salidas versionadas de features/modelado.
+3. La seccion "Algoritmos Implementados" en README esta adelantada respecto al estado real del repositorio.
+
+Prioridad baja:
+
+1. Revisar consistencia de versionado y formato en `requirements.txt` (limpiar espacios vacios finales).
+2. Alinear cifra objetivo en docs (6147) con shape observado del CSV actual (6160) para evitar contradicciones en la presentacion.
+
+---
+
+## 11. Prioridad si Falta Tiempo
+
+Si el equipo se queda corto de tiempo, priorizar en este orden:
+
+1. Dataset limpio con features fisicas.
+2. Un modelo final defendible.
+3. Interpretacion astrofisica clara.
+4. Visualizaciones principales.
+5. Presentacion ensayada.
+6. Mejoras esteticas en R.
+7. Algoritmos extra o analisis secundarios.
+
+La interpretacion fisica vale mas que probar demasiados modelos sin historia clara.
+
