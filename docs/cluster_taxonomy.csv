@@ -1,0 +1,7 @@
+"cluster_name","N","Radius (R⊕)","Mass (M⊕)","Density (g/cm³)","Period (d)","T_eq (K)","[Fe/H]","Planets/Sys"
+"Sub-Neptunes",2540,2.73,8.3,2.4,6.4,904,0.02,1
+"Mini-Neptunes",999,2.23,5.6,2.78,12.1,731,0,2
+"Super-Earths (multi)",795,2.56,9.9,3.69,11.3,709,0.03,3
+"Cold/Warm Jupiters",665,13.2,945.2,2.26,852.5,3669,0.06,1
+"Puffy Neptunes",409,4.22,16.2,1.6,30.6,6756,0,2
+"Earth-sized Rocky",202,1.04,1.1,5.49,5.4,914,-0.043,2

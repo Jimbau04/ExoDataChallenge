@@ -14,8 +14,9 @@ import pandas as pd
 def add_log_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     Add log10 versions of key continuous variables.
-    Astronomical data is notoriously skewed (periods from hours to millennia).
-    Log transforms prevent extreme values from dominating clustering.
+    Astronomical data is notoriously skewed (periods from hours to millennia,
+    temperatures from 20K to 10,000K+). Log transforms prevent extreme values
+    from dominating clustering.
     """
     df = df.copy()
 
@@ -24,6 +25,8 @@ def add_log_features(df: pd.DataFrame) -> pd.DataFrame:
         ("pl_rade", "log_rade"),
         ("pl_bmasse", "log_bmasse"),
         ("pl_orbsmax", "log_smax"),
+        ("pl_eqt", "log_eqt"),
+        ("st_teff", "log_teff"),
     ]:
         if col in df.columns:
             mask = df[col].notna() & (df[col] > 0)
@@ -43,6 +46,9 @@ def add_density(df: pd.DataFrame) -> pd.DataFrame:
 
     Earth reference: 1 M⊕, 1 R⊕ → 5.51 g/cm³
     Formula: ρ = ρ_earth * (M / M⊕) / (R / R⊕)³
+
+    Also creates log_dens — density has a power-law distribution spanning
+    5 orders of magnitude, so log is essential for clustering.
     """
     df = df.copy()
     RHO_EARTH = 5.51  # g/cm³
@@ -57,6 +63,12 @@ def add_density(df: pd.DataFrame) -> pd.DataFrame:
     df["pl_dens_calc"] = np.nan
     df.loc[mask, "pl_dens_calc"] = (
         RHO_EARTH * df.loc[mask, "pl_bmasse"] / (df.loc[mask, "pl_rade"] ** 3)
+    )
+
+    # Log-transform for clustering (density spans ~0.03 to ~14000 g/cm³)
+    df["log_dens"] = np.nan
+    df.loc[mask & (df["pl_dens_calc"] > 0), "log_dens"] = (
+        np.log10(df.loc[mask & (df["pl_dens_calc"] > 0), "pl_dens_calc"])
     )
 
     return df
@@ -174,15 +186,24 @@ def engineer_all_features(df: pd.DataFrame) -> pd.DataFrame:
 # Feature list for clustering
 # ---------------------------------------------------------------------------
 
+# ---------------------------------------------------------------------------
+# Feature selection for clustering
+#
+# IMPORTANT: Pick orthogonal dimensions of planet diversity.
+# Avoid redundancy — mass/radius/density/MR-ratio all measure the same thing.
+# Each feature should capture a DIFFERENT physical aspect of the planet/system.
+# ---------------------------------------------------------------------------
+
 CLUSTERING_FEATURES = [
-    "log_rade",
-    "log_bmasse",
-    "log_period",
-    "log_smax",
-    "pl_dens_calc",
-    "mass_radius_ratio",
-    "pl_eqt",
-    "st_teff",
-    "st_met",
-    "sy_pnum",
+    # Planet physical properties
+    "log_rade",           # SIZE — how big is the planet? (log R⊕)
+    "log_dens",           # COMPOSITION — rock, water, or gas? (log g/cm³)
+    # Orbital architecture  
+    "log_period",         # ORBITAL PERIOD — how close to the star? (log days)
+    # Thermal environment
+    "log_eqt",            # TEMPERATURE — how hot? (log K)
+    # Stellar context
+    "st_met",             # METALLICITY — host star composition (dex)
+    # System architecture
+    "sy_pnum",            # SYSTEM RICHNESS — lone planet or multi-planet?
 ]
