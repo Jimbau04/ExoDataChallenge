@@ -21,3 +21,6 @@ env/
 # Jupyter notebook checkpoints
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
+
+# Generated processed data (too large for git, regenerate locally)
+data/processed/
