@@ -436,12 +436,6 @@ Ver `docs/model_metrics.csv` para resultados detallados de 52 configuraciones pr
 3. **Transiciones graduales:** Captura continuidad entre tipos
 4. **Densidad como discriminante:** Earth-sized tiene ρ=5.49 vs Puffy Neptunes ρ=1.6
 
-### Limitaciones
-
-1. **Silhouette modesto (0.479):** Refleja superposición natural entre tipos planetarios
-2. **Sesgo de detección:** 73.4% tránsito → clusters inevitablemente sesgados
-3. **Artefactos de imputación:** 21.4% de insolaciones estimadas
-4. **Fulton Gap no capturado explícitamente:** Gap en ~1.8 R⊕ visible pero no como cluster separado
 
 ---
 
@@ -493,9 +487,6 @@ ExoDataChallenge/
 │   ├── PSCompPars_2026.csv           # Dataset original (46MB)
 │   └── Dataset Reducido.csv         # Dataset reducido (4MB)
 │
-├── data/processed/                   # ⬜ NO existe (datos en viz_final_r/)
-│   ├── df_clean_features.csv        # Dataset con features
-│   └── X_features.csv               # Matriz de clustering
 │
 ├── docs/
 │   ├── tareas_proyecto.md            # Plan de trabajo detallado
@@ -508,7 +499,7 @@ ExoDataChallenge/
 │   ├── detection_method_distribution.csv # Sesgo de detección
 │   └── archivos/                     # PDFs de referencia
 │
-├── figures/                          # ✅ 10 visualizaciones @ 300dpi
+├── figures/                          
 │   ├── 01_mass_radius.png
 │   ├── 02a_umap_clusters.png
 │   ├── 02b_umap_detection.png
@@ -521,97 +512,37 @@ ExoDataChallenge/
 │   └── 08_dendrogram.png
 │
 ├── notebooks/
-│   ├── 01_ingesta_limpieza.ipynb     # ✅ Fase 1: Ingesta y auditoría
-│   └── 02_feature_engineering.ipynb  # ✅ Fase 2: Features + imputación
+│   ├── 01_ingesta_limpieza.ipynb     
+│   └── 02_feature_engineering.ipynb  
 │
-├── src/                              # ⬜ Solo .gitkeep (módulos pendientes)
+├── src/                              
 │   ├── .gitkeep
-│   ├── utils.py                      # ⬜ Pendiente
-│   ├── features.py                   # ⬜ Pendiente
-│   ├── imputation.py                 # ⬜ Pendiente
-│   └── clustering.py                 # ⬜ Pendiente
+│   ├── utils.py                      
+│   ├── features.py                   
+│   ├── imputation.py                 
+│   └── clustering.py                 
 │
 ├── viz_final_r/
 │   ├── 07_visualizaciones_finales.R # ✅ Script R completo
 │   └── exoplanets_labeled.csv        # ✅ 6,161 filas con clusters
 │
-├── presentation/                     # ⬜ Vacío (pendiente)
+├── presentation/                     
 │
 └── venv/                             # Entorno virtual (no en git)
 ```
 
 ---
 
-## Recomendaciones
-
-### Para Completar el Proyecto (Prioridad Alta)
-
-1. **Crear la presentación** (CRÍTICO)
-   - 12-16 slides, 10-15 minutos
-   - Estructura sugerida en `GUIA_EJECUCION.md`
-   - Incluir las 10 visualizaciones ya generadas
-
-2. **Actualizar estructura de archivos**
-   - Mover `viz_final_r/exoplanets_labeled.csv` → `data/processed/`
-   - Crear módulos en `src/` para reutilizar código
-   - Actualizar `.gitignore` si es necesario
-
-3. **Ensayar la presentación**
-   - Mínimo 3 ensayos con cronómetro
-   - Asignar partes a cada integrante
-   - Verificar que todas las gráficas carguen
-
-### Para Mejorar el Proyecto (Prioridad Media)
-
-4. **Documentar el código en `src/`**
-   - Extraer lógica de notebooks a módulos
-   - Crear `features.py`, `imputation.py`, `clustering.py`
-   - Agregar docstrings y tests
-
-5. **Análisis de sensibilidad**
-   - Probar diferentes conjuntos de features
-   - Evaluar impacto de eliminar features correlacionados
-   - Comparar con/without imputación
-
-6. **Validación cruzada**
-   - Implementar bootstrap para estabilidad de clusters
-   - Calcular incertidumbre en asignaciones
-   - Identificar planetas en fronteras de cluster
-
-### Para Publicación/Futuro (Prioridad Baja)
-
-7. **Análisis de evolución temporal**
-   - Comparar clusters por año de descubrimiento
-   - Evaluar sesgo instrumental
-   - Proyección de futuros descubrimientos
-
-8. **Integración con catálogos externos**
-   - Cruzar con Gaia DR3 para paralajes
-   - Agregar datos de atmósfera (si disponibles)
-   - Comparar con modelos de formación planetaria
-
-9. **Interfaz interactiva**
-   - Dashboard con Streamlit/Dash
-   - Explorador de exoplanetas por cluster
-   - Filtros dinámicos
 
 ### Fortalezas del Proyecto
 
-✅ **Imputación científica** - Relaciones físicas reales, no estadísticas
-✅ **Multi-algoritmo** - 4 métodos comparados rigurosamente
-✅ **Interpretación física** - Cada cluster tiene narrativa astrofísica
-✅ **Visualizaciones nivel publicación** - 10 gráficas @ 300dpi
-✅ **CRISP-DM estructurado** - Metodología clara y documentada
-✅ **Análisis de sesgos** - Detección de 73.4% tránsito documentada
+   - **Imputación científica** - Relaciones físicas reales, no estadísticas
+   - **Multi-algoritmo** - 4 métodos comparados rigurosamente
+   - **Interpretación física** - Cada cluster tiene narrativa astrofísica
+   - **Visualizaciones nivel publicación** - 10 gráficas @ 300dpi
+   - **CRISP-DM estructurado** - Metodología clara y documentada
+   - **Análisis de sesgos** - Detección de 73.4% tránsito documentada
 
-### Áreas de Mejora
-
-⚠️ **Presentación pendiente** - Último paso crítico
-⚠️ **Código en notebooks** - Falta modularización en `src/`
-⚠️ **Sin validación cruzada** - Estabilidad de clusters no evaluada
-⚠️ **data/processed/ vacío** - Estructura de carpetas incompleta
-
----
 
 ## Instalación y Ejecución
 
@@ -639,19 +570,6 @@ cd viz_final_r
 Rscript 07_visualizaciones_finales.R
 ```
 
----
-
-## Contacto y Referencias
-
-- **Evento:** Feria de Puebla 2026 — Planetario de Puebla
-- **Dataset:** NASA Exoplanet Archive — PSCompPars
-- **Metodología:** CRISP-DM
-- **Referencias clave:**
-  - Zeng & Sasselov (2016) - Mass-radius relation
-  - Fulton et al. (2017) - Radius gap (Fulton Gap)
-  - Mazeh et al. (2016) - Neptune Desert
-
----
 
 **Estado actual:** ✅ Fases 1-7 completadas | ⬜ Fase 8 (Presentación) pendiente
 **Última actualización:** 27 de abril de 2026
